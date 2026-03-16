@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+*.egg-info/
+
+# SAM / AWS
+.aws-sam/
+samconfig.toml
+
+# Secrets — never commit these
+app secrets.txt
+tmp_secrets/
+*.env
+
+# Test / debug artifacts
+.pytest_cache/
+.hypothesis/
+htmlcov/
+.coverage
+
+# Output / scratch files
+out*.json
+wk*.json
+invoke_payload*.json
+tmp_cleanup/
+
+# OS
+.DS_Store
+Thumbs.db

@@ -72,6 +72,7 @@ Parameters:
     Type: String
     Default: vp-rag-project-pdf-index
 
+
 Resources:
   HttpApi:
     Type: AWS::Serverless::HttpApi
@@ -163,6 +164,11 @@ Resources:
           Properties:
             Bucket: !Ref SourcePdfBucket
             Events: s3:ObjectCreated:*
+            Filter:
+              S3Key:
+                Rules:
+                  - Name: suffix
+                    Value: .pdf
       Policies:
         - AWSLambdaBasicExecutionRole
         - Statement:
