@@ -1,107 +1,128 @@
-# WhatsApp RAG Assistant on AWS (Python)
+# WhatsApp AI Reporting Assistant
 
-This project implements a 3-Lambda architecture for WhatsApp + RAG:
+A serverless WhatsApp chatbot that answers questions about weekly PDF reports using structured JSON parsing and LLM generation — no embeddings, no vector search.
 
-1. `webhook_handler` receives Meta Cloud API webhook events.
-2. `rag_worker` retrieves context from indexed PDF chunks and answers with Gemini.
-3. `pdf_ingest` indexes one source PDF into S3 Vectors + DynamoDB metadata.
+## Architecture
 
-## Features aligned to your requirements
+```
+WhatsApp User
+     │
+     ▼
+Meta Cloud API
+     │  POST /webhook
+     ▼
+API Gateway (HTTP API)
+     │
+     ▼
+webhook_handler (Lambda)
+     │  async invoke
+     ▼
+rag_worker (Lambda)
+     │                        │
+     ▼                        ▼
+Bedrock (Claude)         S3 structured JSON
+(generation)             (structured_reports.json)
 
-- Python implementation
-- Configurable models via environment variables
-  - Default generation model: `gemini-2.5-flash`
-  - Default embedding model: `gemini-embedding-001`
-  - Easy switch to `gemini-3-flash-preview` by changing `GENERATION_MODEL`
-- Secrets in AWS Secrets Manager
-- Structured JSON logging
-- Idempotent PDF ingestion via SHA-256 document hash marker
-- Safely ignores non-message/non-text webhook events
-- Concise WhatsApp-friendly response style
-- Transparent fallback when context is insufficient (prompt-level enforcement)
-- No PDF re-embedding at query time (query embedding only)
+PDF Upload
+     │  s3:ObjectCreated
+     ▼
+pdf_ingest (Lambda)
+     │  parse PDF → structured JSON
+     ▼
+S3 (structured_reports.json)
+```
+
+## How it works
+
+1. A PDF report is uploaded to S3. `pdf_ingest` parses it into structured JSON (weekly sections: executive summary, hot topics, RFx metrics, delayed projects, GCTO updates) and saves to `structured/structured_reports.json`.
+2. When a WhatsApp message arrives, `webhook_handler` receives it and async-invokes `rag_worker`.
+3. `rag_worker` classifies the query intent, loads the relevant weeks from the structured JSON, builds a focused prompt, and calls Bedrock (Claude) to generate a response.
+4. The answer is sent back via the Meta WhatsApp Cloud API.
+
+No embeddings, no vector store, no DynamoDB — just structured JSON on S3.
 
 ## Project structure
 
-- `src/webhook_handler/app.py`
-- `src/rag_worker/app.py`
-- `src/pdf_ingest/app.py`
-- `src/common/*`
-- `template.yaml` (AWS SAM)
-- `AWS_INFRA_INVENTORY.md` (resource naming + env vars + secrets payloads)
-
-## Secrets Manager expected payloads
-
-### `vp-rag-project/gemini/api`
-```json
-{
-  "api_key": "YOUR_GEMINI_API_KEY"
-}
+```
+src/
+  webhook_handler/app.py   # Receives Meta webhook, async-invokes rag_worker
+  rag_worker/app.py        # Intent classification, context retrieval, LLM generation
+  pdf_ingest/app.py        # PDF → structured JSON → S3
+  common/
+    structured_analyst.py  # Core parsing, intent classification, context building
+    ai_router.py           # Routes between Bedrock and Gemini fallback
+    bedrock_client.py      # AWS Bedrock (Claude) client
+    gemini_client.py       # Google Gemini fallback client
+    whatsapp_client.py     # Meta WhatsApp Cloud API client
+    secrets.py             # Reads secrets from Lambda env vars
+    settings.py            # Loads config from env vars
+    pdf_utils.py           # PDF page extraction
+    logger.py              # Structured JSON logging
+template.yaml              # AWS SAM template
 ```
 
-### `vp-rag-project/meta/whatsapp`
-```json
-{
-  "access_token": "YOUR_META_PERMANENT_TOKEN",
-  "phone_number_id": "YOUR_PHONE_NUMBER_ID"
-}
-```
+## Supported query intents
 
-### `vp-rag-project/meta/webhook_verify`
-```json
-{
-  "verify_token": "YOUR_META_WEBHOOK_VERIFY_TOKEN"
-}
-```
+| Intent | Example queries |
+|---|---|
+| `weekly_summary` | "Summary of overall updates from last 4 weeks" |
+| `hot_topics` | "What are the major hot topics?" |
+| `rfx_metrics` | "Progress comparisons across different weeks" |
+| `delayed_projects` | "Identification of delayed or pending initiatives from last 3 months" |
+| `gcto_updates` | "What is the GCTO update?" |
+| `topic_search` | "What is the update on NTN?" (cross-section keyword search) |
+| greeting | "Hi", "Hello", "Salam" → welcome message, no LLM call |
 
-## DynamoDB schema
+## Secrets
 
-Table name (default): `vp-rag-project-rag-chunks`
+Secrets are passed as Lambda environment variables (JSON strings). No Secrets Manager required.
 
-- PK: `chunk_id`
-- Attributes:
-  - `document_id`
-  - `chunk_index`
-  - `page_number`
-  - `chunk_text`
-  - `source_s3_key`
-  - `token_count`
-  - `created_at`
+| Env var | Content |
+|---|---|
+| `VP_RAG_PROJECT_META_WHATSAPP` | `{"access_token": "...", "phone_number_id": "..."}` |
+| `VP_RAG_PROJECT_META_WEBHOOK_VERIFY` | `{"verify_token": "..."}` |
+| `VP_RAG_PROJECT_GEMINI_API` | `{"api_key": "..."}` (optional, used as fallback) |
 
-Idempotency marker item:
-- `chunk_id = DOC#{document_sha256}`
+## Deploy
 
-## Retrieval and chunking defaults
-
-- `CHUNK_SIZE_TOKENS=700`
-- `CHUNK_OVERLAP_TOKENS=100`
-- `TOP_K=5`
-- Context to generation: best 3-5 chunks (`MIN_CONTEXT_CHUNKS=3`, `MAX_CONTEXT_CHUNKS=5`)
-
-## Deploy (AWS SAM)
-
-Prereqs:
-- AWS CLI configured
-- SAM CLI installed
-- Python 3.12
+Prerequisites: AWS CLI, SAM CLI, Python 3.12.
 
 ```bash
 sam build
-sam deploy --guided
+
+sam deploy \
+  --stack-name vp-rag-project \
+  --no-confirm-changeset \
+  --no-fail-on-empty-changeset \
+  --resolve-s3 \
+  --capabilities CAPABILITY_IAM \
+  --parameter-overrides \
+    "MetaWhatsappSecret={\"access_token\":\"TOKEN\",\"phone_number_id\":\"ID\"}" \
+    "WebhookVerifySecret={\"verify_token\":\"TOKEN\"}" \
+    "GeminiApiSecret={\"api_key\":\"KEY\"}"
 ```
 
-After deploy:
-- Copy `WebhookUrl` output into Meta app webhook callback URL.
-- Set verify token in Meta to match `vp-rag-project/meta/webhook_verify` secret.
-- Upload your source document as any `.pdf` filename into the created source bucket.
+After deploy, copy the `WebhookUrl` output into your Meta app webhook callback URL and set the verify token to match `WebhookVerifySecret`.
+
+## Ingest a new PDF report
+
+```bash
+aws s3 cp "your-report.pdf" s3://vp-rag-project-source-<account>-<region>/source.pdf
+```
+
+`pdf_ingest` triggers automatically on upload. Monitor with:
+
+```bash
+aws logs tail /aws/lambda/vp-rag-project-pdf-ingest --follow
+```
 
 ## Runtime configuration
 
-Change generation model without code changes:
-- Set Lambda env var `GENERATION_MODEL=gemini-3-flash-preview` (or another supported model).
+Key environment variables (set in `template.yaml` or override at deploy time):
 
-## Notes
-
-- S3 Vectors API is used via boto3 `s3vectors` client (`PutVectors`, `QueryVectors`).
-- Ensure your AWS account/region supports S3 Vectors and permissions are enabled.
-- For production, consider adding retries + DLQ and explicit request signing/audit controls.
+| Variable | Default | Description |
+|---|---|---|
+| `PRIMARY_PROVIDER` | `bedrock` | `bedrock` or `gemini` |
+| `GENERATION_MODEL` | `us.anthropic.claude-3-5-haiku-20241022-v1:0` | Bedrock model ID |
+| `FALLBACK_GENERATION_MODEL` | `gemini-2.5-flash` | Gemini fallback model |
+| `STRUCTURED_REPORTS_KEY` | `structured/structured_reports.json` | S3 key for parsed report data |
