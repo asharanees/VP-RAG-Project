@@ -1,0 +1,560 @@
+Q1.Progress comparisons across different weeks
+
+**Progress Comparison – TSA Sector Weekly Reports**
+*(Based on WK-06: 11-Feb-2026, WK-07: 18-Feb-2026, WK-08: 25-Feb-2026)* 
+
+---
+
+# 1. RFP Pipeline Progress
+
+### RFPs Received (2026)
+
+* **WK-06 (11-Feb-2026):** 64 RFPs received 
+* **WK-07 (18-Feb-2026):** 75 RFPs received 
+* **WK-08 (25-Feb-2026):** 89 RFPs received 
+
+**Trend**
+
+* Continuous growth in incoming RFP volume:
+
+  * +11 from WK-06 → WK-07
+  * +14 from WK-07 → WK-08
+
+**Insight**
+
+* Indicates increasing demand and pipeline expansion for TSA review and governance activities.
+
+---
+
+# 2. Approved / In-Progress Projects
+
+### Approved Projects in Progress
+
+* **WK-06 (11-Feb-2026):** 32 approved projects 
+* **WK-07 (18-Feb-2026):** 37 approved projects 
+* **WK-08 (25-Feb-2026):** 44 approved projects 
+
+**Trend**
+
+* Steady increase in approved initiatives:
+
+  * +5 from WK-06 → WK-07
+  * +7 from WK-07 → WK-08
+
+**Insight**
+
+* Execution pipeline is accelerating alongside increased RFP intake.
+
+---
+
+# 3. Change in RFP Classification
+
+### CF Projects
+
+* **WK-06:** 21 CF projects 
+* **WK-07:** 34 CF projects 
+* **WK-08:** 44 CF projects 
+
+**Trend**
+
+* Significant increase in confirmed CF projects across weeks.
+
+**Insight**
+
+* Reflects conversion of demand pipeline into formally tracked projects.
+
+---
+
+# 4. Governance and Architecture Progress
+
+### WK-06 (11-Feb-2026)
+
+Key progress areas:
+
+* Databricks PoC demonstration completed with stakeholders. 
+* GenAI TMF AI Assistant developed for compliance checks. 
+* DC Strategy and roadmap aligned with Infrastructure and Center3. 
+
+### WK-07 (18-Feb-2026)
+
+Key developments:
+
+* Asset disposal governance dashboard approved. 
+* Cloud hardware reclamation service presented to GM level. 
+* External Technology Strategy consultation planned post-Ramadan. 
+
+### WK-08 (25-Feb-2026)
+
+Key progress:
+
+* Cloud roadmap **2026–2029** shared with infrastructure planning. 
+* GTU dashboard program cards finalized. 
+* Site forecasting ML model validated and deployment automation initiated. 
+
+**Trend**
+
+* Progress shifted from **PoC and planning activities (WK-06)** → **governance alignment (WK-07)** → **implementation and deployment preparation (WK-08)**.
+
+---
+
+# 5. Key Risks and Constraints (Across Weeks)
+
+Common issues appearing repeatedly:
+
+* **STAR integration constraints**
+
+  * Cybersecurity approvals and data quality issues. 
+* **Resource limitations**
+
+  * Limited team capacity impacting acceleration. 
+
+---
+
+# Executive Summary
+
+**Overall Progress Trend (WK-06 → WK-08):**
+
+* **RFP intake:** Strong increase (64 → 89).
+* **Project approvals:** Growing execution pipeline (32 → 44).
+* **Governance maturity:** Shift from experimentation (PoC) to implementation readiness.
+* **Persistent risks:** Data readiness and resource constraints affecting STAR acceleration.
+
+---
+
+If useful, I can also produce a **2-month executive summary (WK-01 → WK-08)** highlighting **major achievements, delays, and strategic initiatives for TSA leadership**.
+
+
+
+Q2. Identification of delayed or pending initiatives from last 3 months
+
+**Scope Reviewed:** Weekly reports from **WK-01 (08-Jan-2026)** through **WK-08 (25-Feb-2026)** — covering approximately the last **3 months of activity.** 
+
+---
+
+# Delayed or Pending Initiatives (Last 3 Months)
+
+## 1. Repeatedly Delayed RFP Initiatives
+
+These initiatives appear **consistently delayed across multiple weeks (WK-05 → WK-08)**.
+
+### High-Impact Delays
+
+* **Group ERP Transformation**
+
+  * **Status:** CAPEX – Delayed
+  * **Budget:** SAR **765,000,000**
+  * **Domain:** FUs Enablement
+  * **Referenced:** **WK-06 (11-Feb-2026)** and **WK-08 (25-Feb-2026)** 
+
+* **Internal-Wireless Network Improvements 2025 – Hajj Scope (IBS 1447)**
+
+  * **Budget:** SAR **67,519,408**
+  * **Domain:** Mobility Services
+  * **Referenced:** **WK-05, WK-06, WK-07, WK-08** 
+
+---
+
+### Network & Operations Delays
+
+* **Operation & Maintenance for COW Network**
+
+  * **Budget:** SAR **161,160,000**
+  * **Domain:** Field Operation Center
+  * **Referenced:** **WK-07 (18-Feb-2026)** 
+
+* **TSS Fixed – Nokia**
+
+  * **Budget:** SAR **146,080,503**
+  * **Domain:** Network Operation Center
+  * **Referenced:** **WK-06 → WK-08** 
+
+* **Spare Parts for Network**
+
+  * **Budget:** SAR **50,600,000**
+  * **Domain:** Field Operation Center
+  * **Referenced:** **WK-06 → WK-08** 
+
+* **Huawei Spare Parts for Transmission**
+
+  * **Budget:** SAR **36,000,000**
+  * **Domain:** Field Operation Center
+  * **Referenced:** **WK-05 → WK-08** 
+
+---
+
+### Cloud & Infrastructure Delays
+
+* **Telco Cloud Infrastructure Expansions 2025 – Captive RFP**
+
+  * **Budget:** SAR **6,300,000**
+  * **Domain:** Infrastructure Excellence
+  * **Referenced:** **WK-05 → WK-08** 
+
+* **HCS Hypervisor – IT Cloud**
+
+  * **Budget:** SAR **8,600,000**
+  * **Domain:** Cloud Services
+  * **Referenced:** **WK-05 → WK-06** 
+
+---
+
+### Corporate Enablement / IT Platforms Delays
+
+Recurring delayed corporate initiatives:
+
+* **CorpE – CBU Demand – Tribe Q3**
+
+  * **Budget:** SAR **2,935,210**
+  * **Referenced:** **WK-06 → WK-08** 
+
+* **CorpE – EBU Demand – Tribe Q3**
+
+  * **Budget:** SAR **5,445,429**
+  * **Referenced:** **WK-05 → WK-08** 
+
+* **CorpE – EBU Demand – Tribe Q3 (Additional)**
+
+  * **Budget:** SAR **1,477,895**
+  * **Referenced:** **WK-06 → WK-08** 
+
+* **CorpE – CBU Demand – Tribe Q4**
+
+  * **Budget:** SAR **2,582,770**
+  * **Referenced:** **WK-06 → WK-07** 
+
+---
+
+### Billing & Fulfilment Management Delays
+
+Observed in **WK-08 (25-Feb-2026)**.
+
+* **BFM – EBU Demand 2025 – Q3 – Tribe (Solutions)**
+
+  * Budget: SAR **3,148,279**
+
+* **BFM – CBU Demand 2025 – Q3 – Tribe (TCS)**
+
+  * Budget: SAR **1,622,376**
+
+* **BFM – EBU Demands 2025 – Q4 – IT Platform (TCS)**
+
+  * Budget: SAR **387,813** 
+
+---
+
+# Operational Initiatives Pending / Not Progressing
+
+### Tech Refresh Governance
+
+* **Status:** Governance tracks **not formally initiated**
+* **Impact:** Decision-making and enablement for Tech-Refresh remains pending
+* **Referenced:** **WK-07 (18-Feb-2026)** 
+
+---
+
+### 2G Shutdown Initiative
+
+* **Status:** Awaiting Telecom Committee decision
+* **Risk:** Initiative may be removed depending on committee outcome
+* **Referenced:** **WK-07 and WK-08** 
+
+---
+
+# Key Observations (Trend Across Last 3 Months)
+
+* **Recurring delays across weeks:**
+
+  * Internal Wireless Improvements (Hajj Scope)
+  * Huawei Transmission Spare Parts
+  * Telco Cloud Infrastructure Expansion
+  * Corporate Enablement demands (CBU/EBU Tribe)
+
+* **High financial exposure:**
+
+  * **Group ERP Transformation (SAR 765M)** – largest delayed initiative.
+
+* **Operational dependencies impacting progress:**
+
+  * Governance initiation delays (Tech Refresh).
+  * External committee decisions (2G shutdown).
+
+---
+
+✅ **Summary:**
+
+* **15+ initiatives** flagged as delayed between **WK-05 and WK-08**.
+* Most affected domains:
+
+  * **Field Operation Center**
+  * **Corporate Enablement**
+  * **Network Operations**
+  * **Cloud / Infrastructure Excellence**.
+
+---
+
+If needed, I can also provide:
+
+* **Top 5 highest-budget delayed initiatives**
+* **Trend of delayed RFP counts from WK-01 → WK-08**
+* **Executive-ready summary (1 slide format)** for leadership reporting.
+
+
+Q3. Insights into trends or anomalies in last 3 weeks
+**Scope Reviewed:**
+
+* **WK-06 (11-Feb-2026)**
+* **WK-07 (18-Feb-2026)**
+* **WK-08 (25-Feb-2026)**
+  Source: TSA Sector Weekly Reports 
+
+---
+
+# Key Trends & Anomalies (Last 3 Weeks)
+
+## 1. Increasing RFx Pipeline Volume
+
+**Trend:** Continuous growth in RFx intake and project pipeline.
+
+* **WK-06 (11-Feb-2026):** 64 RFPs received in 2026. 
+* **WK-07 (18-Feb-2026):** 75 RFPs received in 2026. 
+* **WK-08 (25-Feb-2026):** 89 RFPs received in 2026. 
+
+**Insight**
+
+* ~**39% growth in RFx intake** over three weeks.
+* Indicates **increasing procurement activity and project initiation pressure**.
+
+---
+
+# 2. Persistent High Volume of Delayed RFPs
+
+**Trend:** Several large-budget RFPs remain delayed across all three weeks.
+
+Examples repeatedly appearing:
+
+* **Group ERP Transformation – 765M SAR** (CAPEX)
+* **Operation & Maintenance for COW Network – 161M SAR** (OPEX)
+* **TSS Fixed – Nokia – 146M SAR** (OPEX)
+* **Internal Wireless Network Improvements (Hajj IBS) – 67.5M SAR** (CAPEX)
+* **Huawei Spare Parts for Transmission – 36M SAR** (OPEX)
+
+
+**Insight**
+
+* Delays affect **critical infrastructure and transformation initiatives**.
+* Presence across multiple weeks indicates **structural procurement bottlenecks**.
+
+---
+
+# 3. Governance and Compliance Intensification
+
+**Trend:** Increased governance, compliance, and architecture oversight activities.
+
+* **WK-07 (18-Feb-2026):**
+
+  * 21 new STAR non-compliance cases raised across sectors. 
+* **WK-08 (25-Feb-2026):**
+
+  * 150+ compliance cases linked with AI use cases.
+  * 25 compliance cases closed. 
+
+**Insight**
+
+* Strong **governance enforcement trend**.
+* Increased compliance monitoring tied to **AI enablement and architecture roadmap alignment**.
+
+---
+
+# 4. Cloud & Architecture Transformation Momentum
+
+**Trend:** Continued focus on cloud adoption and architecture modernization.
+
+Key initiatives across weeks:
+
+* **WK-06:**
+
+  * Databricks POC and cloudification strategy work. 
+* **WK-07:**
+
+  * Cloud tagging architecture for cost governance. 
+* **WK-08:**
+
+  * IT Cloud roadmap 2026-2029 shared with Infrastructure planning. 
+
+**Insight**
+
+* Multi-week focus suggests **cloud transformation is a strategic priority**.
+
+---
+
+# 5. Execution Risks & Operational Constraints
+
+**Anomalies / Risks observed**
+
+### Resource & Data Constraints
+
+* **STAR repository integration facing:**
+
+  * Cybersecurity approvals delays
+  * Data readiness issues
+  * Limited team capacity 
+
+### Governance Delay
+
+* **Tech Refresh governance tracks not yet initiated** as of **WK-07 (18-Feb-2026)**. 
+
+**Implication**
+
+* These constraints may **slow architecture adoption and program execution**.
+
+---
+
+# Executive Summary
+
+**Major Trends (WK-06 → WK-08)**
+
+* RFx pipeline **rapidly expanding** (64 → 89 RFPs).
+* **Large infrastructure RFPs remain delayed**, including a **765M SAR ERP transformation**.
+* **Governance and compliance enforcement increasing**, particularly through STAR and AI-aligned compliance.
+* **Cloud transformation and architecture roadmap initiatives accelerating**.
+
+**Key Risk Signals**
+
+* Procurement delays in high-value programs.
+* Data readiness and resource constraints impacting architecture initiatives.
+* Governance processes (e.g., Tech Refresh) not fully initiated.
+
+---
+
+If helpful, I can also provide a **1-slide executive insight summary suitable for leadership reporting.**
+
+Q4. Summary of overall updates from last 4 weeks 
+**Scope Reviewed:**
+
+* **WK-05 (04-Feb-2026)**
+* **WK-06 (11-Feb-2026)**
+* **WK-07 (18-Feb-2026)**
+* **WK-08 (25-Feb-2026)** 
+
+---
+
+# Overall Updates – Last 4 Weeks
+
+## 1. Strategy & Architecture Initiatives
+
+* **WK-06 (11-Feb-2026):**
+
+  * AI-RAN strategy finalized after technical session with Huawei. 
+  * DC strategy and roadmap aligned with Infrastructure and Center3. 
+
+* **WK-07 (18-Feb-2026):**
+
+  * Alignment with Infrastructure on **Legacy Modernization & Migration (LMM3) strategy and 2026 plan**. 
+  * Technology Strategy **external consultation project planned to start 6-Apr** with Accenture. 
+
+* **WK-08 (25-Feb-2026):**
+
+  * **IT Cloud Roadmap 2026-2029** shared with Infrastructure Planning for deployment planning. 
+  * Technology strategy insights contributed during **Strategy-to-Realization value chain design session**. 
+
+---
+
+# 2. Cloud, Data & Platform Initiatives
+
+* **WK-05 (04-Feb-2026):**
+
+  * Databricks POC preparation with closure targeted by month-end. 
+  * Cloud onboarding framework aligned with AIDS for BU adoption acceleration. 
+
+* **WK-06 (11-Feb-2026):**
+
+  * Databricks **use-case POC demonstration completed**, with performance and TCO analysis ongoing. 
+  * J2C progress reached **75% with 9 services onboarded** to MCMP and 3 capabilities to private cloud. 
+
+* **WK-07 (18-Feb-2026):**
+
+  * Updated **cloudification recommendation list** shared with ITP. 
+  * Public cloud tagging architecture introduced to improve **spend transparency and chargeback governance**. 
+
+* **WK-08 (25-Feb-2026):**
+
+  * Tech-refresh and migration discussions initiated with ITP and architecture teams. 
+
+---
+
+# 3. Governance, Compliance & Architecture Management
+
+* **WK-05 (04-Feb-2026):**
+
+  * Compliance governance strengthened through portal improvements and sector coordination. 
+
+* **WK-07 (18-Feb-2026):**
+
+  * Compliance portal enhancements implemented; **21 new STAR non-compliance cases raised** and **24 cases converted from waived to non-compliant**. 
+
+* **WK-08 (25-Feb-2026):**
+
+  * **150+ compliance cases linked with AI use-cases** and **25 compliance cases closed**. 
+  * Cloud & Core architecture standards **approved and published at Maturity Level 4**. 
+
+---
+
+# 4. Cost Optimization & Efficiency
+
+* **WK-06 (11-Feb-2026):**
+
+  * **3.47M SAR OPEX savings** achieved through ADTRAN technical support review. 
+
+* **WK-07 (18-Feb-2026):**
+
+  * **3.747M SAR OPEX savings** achieved by shortening ADTRAN project timeline. 
+
+* **WK-08 (25-Feb-2026):**
+
+  * Replacement of **HCL Digital Experience with Adobe Experience Manager**, generating **4.7M SAR savings**. 
+
+---
+
+# 5. Key Technology Programs
+
+* **WK-06 (11-Feb-2026):**
+
+  * GenAI TMF assistant developed for **TMF compliance and component design automation**. 
+  * Location-Based Advertising solution evaluation completed across **5 vendors**. 
+
+* **WK-07 (18-Feb-2026):**
+
+  * GSMA ISAG standards review completed to safeguard architecture alignment. 
+  * LEO satellite backhaul and IoT connectivity engagement progressed. 
+
+* **WK-08 (25-Feb-2026):**
+
+  * Satellite NTN connectivity options evaluated with OQ for NB-IoT deployment. 
+  * Optical network trends workshop conducted with Nokia MEA. 
+
+---
+
+# 6. Key Risks / Constraints
+
+* **WK-06–08:**
+
+  * STAR repository progress constrained by **data readiness, cybersecurity approvals, and limited resources**. 
+  * Tech-refresh governance **not formally initiated**, impacting structured execution. 
+
+---
+
+# Executive Takeaway
+
+Across **WK-05 → WK-08**, TSA focused on:
+
+* Advancing **cloud transformation and platform modernization**
+* Strengthening **architecture governance and compliance automation**
+* Driving **cost optimization (≈11.9M SAR combined savings)**
+* Progressing **AI, satellite connectivity, and network architecture strategy**
+* Preparing **2026–2029 technology roadmap and GTU blueprint alignment**
+
+---
+
+If needed, I can also produce a **1-slide executive summary version suitable for VP/GCTO reporting.**
+
+

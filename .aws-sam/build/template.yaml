@@ -1,0 +1,297 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: WhatsApp RAG assistant on AWS (API Gateway + Lambda + S3 Vectors + DynamoDB
+  + Gemini)
+Globals:
+  Function:
+    Runtime: python3.12
+    Timeout: 60
+    MemorySize: 512
+    Tracing: Active
+    Tags:
+      Project: VP RAG Project
+      ManagedBy: SAM
+      Application: whatsapp-rag-assistant
+      CostProfile: minimum-cost-high-quality
+    Environment:
+      Variables:
+        CHUNKS_TABLE_NAME: unused
+        S3_VECTORS_BUCKET:
+          Ref: S3VectorsBucketName
+        S3_VECTORS_INDEX:
+          Ref: S3VectorsIndexName
+        SOURCE_BUCKET_NAME:
+          Fn::Sub: vp-rag-project-source-${AWS::AccountId}-${AWS::Region}
+        STRUCTURED_REPORTS_KEY: structured/structured_reports.json
+        PRIMARY_PROVIDER:
+          Ref: PrimaryProvider
+        VP_RAG_PROJECT_META_WHATSAPP:
+          Ref: MetaWhatsappSecret
+        VP_RAG_PROJECT_META_WEBHOOK_VERIFY:
+          Ref: WebhookVerifySecret
+        VP_RAG_PROJECT_GEMINI_API:
+          Ref: GeminiApiSecret
+        GENERATION_MODEL:
+          Ref: GenerationModel
+        EMBEDDING_MODEL:
+          Ref: EmbeddingModel
+        FALLBACK_GENERATION_MODEL:
+          Ref: FallbackGenerationModel
+        FALLBACK_EMBEDDING_MODEL:
+          Ref: FallbackEmbeddingModel
+        TOP_K: 5
+        MIN_CONTEXT_CHUNKS: 3
+        MAX_CONTEXT_CHUNKS: 5
+        CHUNK_SIZE_TOKENS: 700
+        CHUNK_OVERLAP_TOKENS: 100
+        WHATSAPP_GRAPH_VERSION: v22.0
+Parameters:
+  PrimaryProvider:
+    Type: String
+    Default: bedrock
+  MetaWhatsappSecret:
+    Type: String
+    NoEcho: true
+    Description: JSON string with access_token, phone_number_id for WhatsApp
+  WebhookVerifySecret:
+    Type: String
+    NoEcho: true
+    Description: JSON string with verify_token for webhook verification
+  GeminiApiSecret:
+    Type: String
+    NoEcho: true
+    Default: '{}'
+    Description: JSON string with api_key for Gemini (optional)
+  GenerationModel:
+    Type: String
+    Default: us.anthropic.claude-3-5-haiku-20241022-v1:0
+  EmbeddingModel:
+    Type: String
+    Default: amazon.titan-embed-text-v2:0
+  FallbackGenerationModel:
+    Type: String
+    Default: gemini-2.5-flash
+  FallbackEmbeddingModel:
+    Type: String
+    Default: gemini-embedding-001
+  S3VectorsBucketName:
+    Type: String
+    Default: vp-rag-project-vectors
+  S3VectorsIndexName:
+    Type: String
+    Default: vp-rag-project-pdf-index
+Resources:
+  HttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      Name: vp-rag-project-http-api
+      Tags:
+        Project: VP RAG Project
+        ManagedBy: SAM
+        Application: whatsapp-rag-assistant
+        CostProfile: minimum-cost-high-quality
+      CorsConfiguration:
+        AllowMethods:
+        - GET
+        - POST
+        AllowHeaders:
+        - '*'
+        AllowOrigins:
+        - '*'
+  SourcePdfBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName:
+        Fn::Sub: vp-rag-project-source-${AWS::AccountId}-${AWS::Region}
+      Tags:
+      - Key: Project
+        Value: VP RAG Project
+      - Key: ManagedBy
+        Value: SAM
+      - Key: Application
+        Value: whatsapp-rag-assistant
+      - Key: CostProfile
+        Value: minimum-cost-high-quality
+  WebhookHandlerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: vp-rag-project-webhook-handler
+      Handler: webhook_handler.app.lambda_handler
+      CodeUri: WebhookHandlerFunction
+      Environment:
+        Variables:
+          RAG_WORKER_FUNCTION: vp-rag-project-rag-worker
+      Events:
+        WebhookGet:
+          Type: HttpApi
+          Properties:
+            ApiId:
+              Ref: HttpApi
+            Path: /webhook
+            Method: GET
+        WebhookPost:
+          Type: HttpApi
+          Properties:
+            ApiId:
+              Ref: HttpApi
+            Path: /webhook
+            Method: POST
+      Policies:
+      - AWSLambdaBasicExecutionRole
+      - Statement:
+        - Effect: Allow
+          Action:
+          - lambda:InvokeFunction
+          Resource:
+            Fn::GetAtt:
+            - RagWorkerFunction
+            - Arn
+    Metadata:
+      SamResourceId: WebhookHandlerFunction
+  RagWorkerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: vp-rag-project-rag-worker
+      Handler: rag_worker.app.lambda_handler
+      CodeUri: RagWorkerFunction
+      Policies:
+      - AWSLambdaBasicExecutionRole
+      - Statement:
+        - Effect: Allow
+          Action:
+          - s3:GetObject
+          Resource:
+            Fn::Sub: arn:aws:s3:::${SourcePdfBucket}/*
+        - Effect: Allow
+          Action:
+          - bedrock:InvokeModel
+          Resource: '*'
+    Metadata:
+      SamResourceId: RagWorkerFunction
+  PdfIngestFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: vp-rag-project-pdf-ingest
+      Handler: pdf_ingest.app.lambda_handler
+      CodeUri: PdfIngestFunction
+      Timeout: 300
+      MemorySize: 1024
+      Events:
+        SourcePdfCreated:
+          Type: S3
+          Properties:
+            Bucket:
+              Ref: SourcePdfBucket
+            Events: s3:ObjectCreated:*
+      Policies:
+      - AWSLambdaBasicExecutionRole
+      - Statement:
+        - Effect: Allow
+          Action:
+          - s3:GetObject
+          - s3:PutObject
+          Resource: '*'
+    Metadata:
+      SamResourceId: PdfIngestFunction
+  WebhookHandlerLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/lambda/vp-rag-project-webhook-handler
+      RetentionInDays: 14
+      Tags:
+      - Key: Project
+        Value: VP RAG Project
+      - Key: ManagedBy
+        Value: SAM
+      - Key: Application
+        Value: whatsapp-rag-assistant
+      - Key: CostProfile
+        Value: minimum-cost-high-quality
+  RagWorkerLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/lambda/vp-rag-project-rag-worker
+      RetentionInDays: 14
+      Tags:
+      - Key: Project
+        Value: VP RAG Project
+      - Key: ManagedBy
+        Value: SAM
+      - Key: Application
+        Value: whatsapp-rag-assistant
+      - Key: CostProfile
+        Value: minimum-cost-high-quality
+  PdfIngestLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/lambda/vp-rag-project-pdf-ingest
+      RetentionInDays: 14
+      Tags:
+      - Key: Project
+        Value: VP RAG Project
+      - Key: ManagedBy
+        Value: SAM
+      - Key: Application
+        Value: whatsapp-rag-assistant
+      - Key: CostProfile
+        Value: minimum-cost-high-quality
+  LambdaErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: vp-rag-project-lambda-errors
+      AlarmDescription: Alarm on Lambda errors for RAG worker
+      Tags:
+      - Key: Project
+        Value: VP RAG Project
+      - Key: ManagedBy
+        Value: SAM
+      - Key: Application
+        Value: whatsapp-rag-assistant
+      - Key: CostProfile
+        Value: minimum-cost-high-quality
+      Namespace: AWS/Lambda
+      MetricName: Errors
+      Dimensions:
+      - Name: FunctionName
+        Value:
+          Ref: RagWorkerFunction
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+  LambdaThrottlesAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: vp-rag-project-lambda-throttles
+      AlarmDescription: Alarm on Lambda throttles for RAG worker
+      Tags:
+      - Key: Project
+        Value: VP RAG Project
+      - Key: ManagedBy
+        Value: SAM
+      - Key: Application
+        Value: whatsapp-rag-assistant
+      - Key: CostProfile
+        Value: minimum-cost-high-quality
+      Namespace: AWS/Lambda
+      MetricName: Throttles
+      Dimensions:
+      - Name: FunctionName
+        Value:
+          Ref: RagWorkerFunction
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+Outputs:
+  WebhookUrl:
+    Description: Meta webhook callback URL
+    Value:
+      Fn::Sub: https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/webhook
+  SourceBucketName:
+    Value:
+      Ref: SourcePdfBucket

@@ -1,0 +1,142 @@
+{
+  "WK-07": {
+    "gcto_updates": "Sector Weekly Report\nCompliance & Governance\n Achieved OPEX savings of 3.747M by shortening the ADTAN\nproject timeline from three years to two, aligned with the\ncopper sunset strategy.\nCloud HW Reclamation\n Presented the newly developed Cloud IT HW Reclamation\nservice in Tech-Portal on GM level with AGA/cloud services\nGD.\nAssets Registration\n Approved the BAT for the CR related to nominate CMDB as",
+    "weekly_digest": "1\nCompliance & Governance\n Achieved OPEX savings of 3.747M by shortening the ADTAN\nproject timeline from three years to two, aligned with the\ncopper sunset strategy.\nCloud HW Reclamation\n Presented the newly developed Cloud IT HW Reclamation\nservice in Tech-Portal on GM level with AGA/cloud services\nGD.\nAssets Registration\n Approved the BAT for the CR related to nominate CMDB as\nsingle source of truth for stc servers. Next to deploy the new\nservice in production.\n2 3\nDisposal Governance\n Approved the BAT for Assets Disposal Dashboard with\nAI&DS-files upload phase, next phase to start dashboards\ndevelopment phase.\nSatellite/ NTN\n Coordination on AST GWs D2D spectrum (ideally to be\nsimilar to commercial) for POC to test interference on MW\nlinks.\n OQ engagement has been initiated and a task force has\nbeen established including all TU stakeholders\nGSMA ISAG Voting\n Completed review and voting on key GSMA standards\nupdates impacting core and Open Gateway domains. This\nengagement safeguarded stc’s architecture strategy and\nstrengthened our role in global standards governance.\n4 5 6\nLegacy Modernization and Migration\n Aligned with INFRA regarding LMM 3 proposed Strategy and\n2026 action plan.\n2G Shutdown\n Updated the 2G Shutdown challenges report to follow-up 2G\nshutdown strategy execution.\nTS – External Consultation\n Drove alignment with the Accenture team to initiate the\nTechnology Strategy – External Consultation project post-\nRamadan on 6-April, securing completion of core team\nfinalization by 18-March.\n10 11 12\nCompleted\nAbdullah H. F Alfaifi\nProject Owner\nJoining the investigation force led by Infrastructure sector and\nto ensure GTU processes are being followed for product\ndevelopment and PoC.\n22 Jan 2026\n On Track\nSami H. Alzomaia\nProject Owner\nDevelop a Proposal For Implementing Circular Economy\nPrinciples Across All Subsidiaries, Starting With It Services\nOffered By Solutions\n30 June 2026\n Completed\nAhmed Alshaikh\nProject Owner\nPresent to GCTO detailed status-quo on EA Repository and\nshow engagement model and support needed\n26 Oct 2025\n Concluded the refreshment activity to generate an updated\ncloudification recommendation list to be shared with ITP\nteam.\n Aligned with INFRA regarding ISP and FTTH Fundamental\nPlans.\n Delivering public cloud tagging architecture as a mandatory\ncost-governance foundation—enabling spend\ntransparency, accurate chargeback, and budget control to\navoid waste and weak accountability.\n7 8 9\nCloudification Strategy Fixed Fundamental Plan Public Cloud Architecture\nTech-Refresh and Migration to public Cloud\n The Tech Refresh governance tracks (Process, ARB\nOnboarding, and CCoE) have not yet formally initiated,\nand no progress  recorded to date. As a result, the\ngovernance, decision-making, and enablement project\nof the Tech Refresh remains pending, which may impact\nstructured execution and alignment going forward.\nHuawei IT Cloud proposal\n RFP has been received to support King Salman’s parks\nrequirements from EBU on the HCS IT Cloud and is\ncurrently in the alignment phase with BA.\nERM Engagement\n A meeting was held with ERM and Excellence team to\nagree on the procedure of rephrasing and transferring\nthe new risks. (10 Risks)\nIA vacancies (FTEs, MSPs) Recruiting\n 36 total CVs, 26 CVs shortlisted, 25 interviews done, 5\nunder Final Selection.\nDR and Resiliency\n Resiliency guidelines document has been updated and\nshared with management.\nDatabricks\n TCO analysis is ongoing to evaluate migrating ETL workloads\nfrom Ab Initio and Teradata to Databricks.\nSEA\n SEA tools assessment exercise is in closing stage (95%)\nfor both STC and MSP tools, updating the final reports in\nprogress.\nCPP\n Agreed with Huawei on CCP Decommissioning to be\ndone in two different phases, each phase is expected to\ntake 6 months, no we're in the process of going through\nthe detail.\nReporting & Executive Visibility\n RFX automation; Executive (Monthly) Dashboard design\nand reviews.\nEnterprise Architecture (STAR)\n Architecture mapping and STAR integration are progressing, enhancing end-to-end visibility across applications and technology; additionally, two STAR awareness sessions were conducted\nfor the TSA team to strengthen adoption and alignment. Cybersecurity approvals and source data quality remain constraints.\n Key risks remain around data readiness and limited team capacity, with undefined access processes and resource constraints impacting overall acceleration post go-live.\nTechnology Governance & ARB\n Continued discussion and reviewed received inputs for S2R Controls maturity with TSA & TEC (awareness sessions and follow-up meetings with IA DA TS GDs; discussing draft inputs\nreceived from TSBA-BA and  Architecture Governance)\n Follow-up with procurement on RfX & Procurement linkage and approach for different project types (e.g. MPA, projections) - awaiting their response.\n Successfully secured offline approvals from all Sectors and formally raised the process in APG.\nGTU Blueprint 2026\nProvided GTU feedback on the GSU watchlist meeting minutes presented at the C-level and aligned on the way forward for the 2026 GTU initiatives, with the following key highlights:\n The 2G Shutdown initiative will be removed unless the upcoming Telecom Committee decides to retain it and assigns the necessary prerequisites to the relevant BUs.\n CAPEX and OPEX savings targets for Fiber will be included once the GEP team provides the numbers; otherwise, these metrics will be omitted.\nTechnology Strategy\nArchitecture\nSector Weekly Report\n WK-07\nSector Weekly Report",
+    "key_projects_hot_topics": "Compliance\n Implemented an alternative solution in the Compliance Portal to update department names for STAR account cases.\n Raised 21 new STAR-related noncompliance cases across sectors (AIDS 8, CSDM 2, Infra 4, ITP 7) and converted 24 cases from Waived to Noncompliant following waiver expiry related to NGN\nshutdown.\n Shared the first draft of the compliance assessment with HPG for validation and aligned with GTCO direction by coordinating with sectors and TSA to gather additional data and improve\nvisibility on open cases.\nRFX Cost Optimization ~ Achieved in 2026\nSector Weekly Report",
+    "cost_optimization": "0\nmSAR\n0\nmSAR\n0\nmSAR\nSector Weekly Report",
+    "rfx_status": {
+      "total_received": 75,
+      "total_approved": 37,
+      "total_in_progress": 38,
+      "total_cf_projects": 34,
+      "raw_section_text": "75 RFPs\nReceived in 2026\n37 Approved Projects\n In Progress RFPs\n38 34 CF Projects\n2026 Projects\n41\nTechnology Strategy and Architecture Sector\nStatus Breakdown Project Classification\nThe Projects Have A Pib But Have Not Yet Been Received By RFX Direct Value MPA Projects Status\nEnvelope 2026 05\nEnvelope 2025 18\nCF 2024 14\nCF 2023 00\nProject without FN 02\nThis Year Envelope or CF # of Projects\nTotal 39\nApproved by RFX 20\nMPA Review in RFX 05\nPIB In-Progress 01\nTotal 26\nDirect Value MPA # of Projects\nYear-to-Date Project Overview"
+    },
+    "delayed_rfps_first5": [
+      {
+        "initiative_name": "Sub RFP Name Impacted Domain Status Pending With Expense GD Name Budget (SAR)",
+        "domain": null,
+        "budget_sar": null,
+        "status": "pending",
+        "pending_with": null,
+        "expense_type": null,
+        "raw_row_text": "Sub RFP Name Impacted Domain Status Pending With Expense GD Name Budget (SAR)"
+      },
+      {
+        "initiative_name": "IBS 1447 (ESM + RF) SPG - HPG Supplier CAPEXDELAYED",
+        "domain": "Mobility Services",
+        "budget_sar": 67519408,
+        "status": "delayed",
+        "pending_with": "Supplier",
+        "expense_type": "CAPEX",
+        "raw_row_text": "IBS 1447 (ESM + RF) SPG - HPG Supplier CAPEXDELAYED 67,519,408 Mobility Services"
+      },
+      {
+        "initiative_name": "O&M for FTTH network (Spare Parts FTTH-VDSL) IA Supplier OPEXDELAYED",
+        "domain": "Field Operation Center",
+        "budget_sar": 25432940,
+        "status": "delayed",
+        "pending_with": "Supplier",
+        "expense_type": "OPEX",
+        "raw_row_text": "O&M for FTTH network (Spare Parts FTTH-VDSL) IA Supplier OPEXDELAYED 25,432,940 Field Operation Center"
+      },
+      {
+        "initiative_name": "CorpE – CBU Demand – Tribe Q3 DA - AA TA-Domain CAPEXDELAYED",
+        "domain": "Corporate Enablement",
+        "budget_sar": 2935210,
+        "status": "delayed",
+        "pending_with": "TA-Domain",
+        "expense_type": "CAPEX",
+        "raw_row_text": "CorpE – CBU Demand – Tribe Q3 DA - AA TA-Domain CAPEXDELAYED 2,935,210 Corporate Enablement"
+      },
+      {
+        "initiative_name": "Operation and maintenance for COW Network SPG TA-Domain OPEXDELAYED",
+        "domain": "Field Operation Center",
+        "budget_sar": 161160000,
+        "status": "delayed",
+        "pending_with": "TA-Domain",
+        "expense_type": "OPEX",
+        "raw_row_text": "Operation and maintenance for COW Network SPG TA-Domain OPEXDELAYED 161,160,000 Field Operation Center"
+      }
+    ]
+  },
+  "WK-08": {
+    "gcto_updates": "Sector Weekly Report\nSatellite/ NTN\n Deep dive with OQ proposed options analysis for NTN Nb\nIoT connectivity to select the suitable options for stc\ndeployment.\nESM Optimization\n Share the Enhanced Subscription Model (ESM) IA optimization\nproposal with TEC to be part of the consolidated proposal\npresented to GCTO. The proposal aims to optimize costs\nthrough detailed technical assessment and review of the\nexisting pricing mode",
+    "weekly_digest": "1\nSatellite/ NTN\n Deep dive with OQ proposed options analysis for NTN Nb-\nIoT connectivity to select the suitable options for stc\ndeployment.\nESM Optimization\n Share the Enhanced Subscription Model (ESM) IA optimization\nproposal with TEC to be part of the consolidated proposal\npresented to GCTO. The proposal aims to optimize costs\nthrough detailed technical assessment and review of the\nexisting pricing mode\nCost Optimization Opportunities\n As part of the Cloud and Core Architecture cost optimization\ninitiative with the Category Management team, we are\nidentifying structural cost optimization opportunities across\ncontracts, licensing, BoQ modeling, and infrastructure sizing,\nenabling sustainable cloud cost reduction.\n2 3\nCloud Roadmap\n IT cloud extensive RoadMap 2026-2029 has been shared with\nInfra Planning team to be followed for stc 2026 deployment\nplan.\nGTU Dashboard\n Finalized GTU dashboard program cards for J2C and J2C\nbeyond programs in alignment with TEC PMO and including\nsustainability and AI infra initiatives\nOptical Networks Global Trends\n A technical workshop has been conducted with Nokia MEA\ntechnical mangers to discuss the optics roadmap and global\ntrends for 2026. This workshop was a great opportunity to\ndiscuss the new features and their relevance for stc in order\nto update the architecture roadmap accordingly.\n4 5 6\nTSBA Playbook\n Revisiting the TS part in TSBA playbook to be clear and have\nthe needed details .\n2G Shutdown\n Provided GTU feedback on the proposed GTU metrics and\nmilestones received from GSU. We are currently awaiting\nthe decision on the 2G shutdown, pending the outcome of\nthe Telecom Committee meeting.\nTechnology Strategy Contribution\n Contributed Technology Strategy insights during the\nStrategy-to-Realization Value Chain design session on the\nproposed process for Strategy Development.\n10 11 12\nOn Track\nSami H. Alzomaia\nProject Owner\nDevelop a Proposal For Implementing Circular Economy Principles Across All Subsidiaries, Starting With It Services Offered By Solutions\n30 June 2026\n Site forecasting automation model has been validated and\nthe deployment automation phase has been initiated with\nAIDS team.\n Successfully phased-out HCL Digital Experience and\nreplaced it with Adobe Experience Manager (Saving 4.7\nMSAR)\n The IRAM milestones for the GTU blueprint will be deferred\nto the end of Q1, in line with the feedback received from the\nHead of the OSS Program.\n7 8 9\nSite Forecasting Using ML Technology Rationalization IRAM Milestones\nTech-Refresh and Migration to public Cloud\n A meeting with ITP team had been held, with\nparticipation from IA, DA, AGA, and TSA VP Advisor. Key\npoints were discussed, and it was agreed to arrange\nfocused follow-up sessions to further discuss and\nresolve outstanding items.\nDR and Resiliency\n We have visited infrastructure VP and GMs to discuss\nthe Disaster Recovery (DR) Solution Architecture. Some\nenhancements have been raised by infra aiming to\nfortify the assessment framework and ensuring greater\nresilience. The refined architecture will be presented for\nfinal review and implementation.\nERM Engagement\n A meeting was held with ERM and Excellence team to\nconfirm the final IA list. (9 out of10 Risks were accepted\nand one Risk transferred to DA).\nIA vacancies (FTEs, MSPs) Recruiting\n Mobile Access consultants have been selected\nArchitecture Guild\n Held the sixth session of the Architecture Guild on DRA\ncomponents & Integration Framework.\nReporting & Executive Visibility\n Executive (Monthly) Dashboard design and reviews collating\nTAG main functions\n ARB reporting automation in progress.\nSEA\n Aligned with SEA on the roadmap of MSP tools.\nCompliance\n Compliance & AI Enablement: Linked 150+ validated compliance cases with AI use-cases and aligned open items to the\nArchitecture Roadmap.\n Governance Progress: Closed 25 compliant cases and advanced HPG assessment on discovery agents and CMDB accuracy.\n GCTO Execution: ~60% of requested case details submitted; remaining to be finalized this week at stc.\nEnterprise Architecture (STAR)\n Architecture mapping and STAR integration are progressing, enhancing end-to-end visibility across applications and technology; additionally, two STAR awareness sessions were conducted\nfor the TSA team to strengthen adoption and alignment. Cybersecurity approvals and source data quality remain constraints.\n Key risks remain around data readiness and limited team capacity, with undefined access processes and resource constraints impacting overall acceleration post go-live.\nTechnology Governance & ARB\n Continuing works and follow-ups on S2R Controls maturity: as-is; reviews with owners, and enhancements /action plan - with TEC and TSA\n CIAM HLD preliminary review completed; risk reduction guidance issued to CS,\n OSS NG NMS Consolidation HLD reviewed and feedback sent back to Stakeholders,\n Cloud & Core Standards fully reviewed and approved; elevated to Maturity Level 4 for publication\nGTU Blueprint 2026\nGCTO has been briefed about the 2026 Technology Unit (TU) which includes:\n GTU Blueprint KPIs – Fully aligned with GSU strategic objectives to ensure strategic coherence at the group level.\n Technology Unit KPIs – Covering the 2026 investment priorities and key focus areas to support execution of the technology roadmap\n Received feedback from CSDM on the GTU priorities 2026; following-up with the remaining Excellence GMs to obtain their input and complete the alignment process.\nTechnology Strategy\nArchitecture\nSector Weekly Report\n WK-08\nSector Weekly Report",
+    "key_projects_hot_topics": "Tech Enablement\n Continued enabling TEC in the discussions with all TU\nsectors over developing the milestones plan for agreed GSU\nMilestones\nMobile App Assessment (Group Level)\n As part of the continued engagement with subsidiaries, 64\nfindings were identified and delivered across 7 mobile\napplications, along with 7 maturity evaluations.\nIPNOC Assessment\n Assessment concluded with Cisco and SEA and approval\nwas granted, Cisco was given the guidelines to follow in\norder to avoid duplication and to ensure openness in the\nsolution.\n13 14 15\nRFX Cost Optimization ~ Achieved in 2026\nSector Weekly Report",
+    "cost_optimization": "0\nmSAR\n0\nmSAR\n0\nmSAR\nSector Weekly Report",
+    "rfx_status": {
+      "total_received": 89,
+      "total_approved": 44,
+      "total_in_progress": 45,
+      "total_cf_projects": 44,
+      "raw_section_text": "89 RFPs\nReceived in 2026\n44 Approved Projects\n In Progress RFPs\n45 44 CF Projects\n2026 Projects\n45\nTechnology Strategy and Architecture Sector\nStatus Breakdown Project Classification\nThe Projects Have A Pib But Have Not Yet Been Received By RFX Direct Value MPA Projects Status\nEnvelope 2026 07\nEnvelope 2025 11\nCF 2024 15\nCF 2023 00\nProject without FN 01\nThis Year Envelope or CF # of Projects\nTotal 34\nApproved by RFX 16\nMPA Review in RFX 24\nPIB In-Progress 00\nTotal 40\nDirect Value MPA # of Projects\nYear-to-Date Project Overview\nCorpE – CBU Demand – Platform Q3 AA TA-Domain CAPEXDELAYED 329,961 Corporate Enablement\nCorpE – EBU Demand – Tribe Q3 – Additional AA _ DA TA-Domain CAPEXDELAYED 1,477,895 Corporate Enablement\nBFM – CBU Demands 2025 – Q4 - IT platform - Solutions HPG - IA - AA - DA TA-Domain CAPEXDELAYED 1,328,556 Billing & Fulfilment Management\nBFM – EBU Demand 2025 – Q3 - Tribe  - TCS AA - DA TA-Domain CAPEXDELAYED 1,129,980 Billing & Fulfilment Management\nGroup ERP transformation AA - DA - IA - SPG Supplier CAPEXDELAYED 765,000,000FUs Enablement\nCorporate License Renewal 2026 AA - DA - SPG Supplier OPEXDELAYED 25,104,854 IT Platforms Excellence\nCorpE – CBU Demand – Tribe Q4 AA - DA TA-Domain CAPEXDELAYED 2,582,770  Corporate Enablement\nCAM - CBU Demand 2025 - CAM Apps - Platform Q4 - Solutions by stc AA - DA TA-Domain CAPEXDELAYED 3,737,757 Customer & Assurance Management\nCAM - CBU Demand 2025 - CAM Apps - Platform Q4 - TCS AA - DA TA-Domain CAPEXDELAYED 1,020,616 Customer & Assurance Management"
+    },
+    "delayed_rfps_first5": [
+      {
+        "initiative_name": "Sub RFP Name Impacted Domain Status Pending With Expense GD Name Budget (SAR)",
+        "domain": null,
+        "budget_sar": null,
+        "status": "pending",
+        "pending_with": null,
+        "expense_type": null,
+        "raw_row_text": "Sub RFP Name Impacted Domain Status Pending With Expense GD Name Budget (SAR)"
+      },
+      {
+        "initiative_name": "IBS 1447 (ESM + RF) SPG - HPG Supplier CAPEXDELAYED",
+        "domain": "Mobility Services",
+        "budget_sar": 67519408,
+        "status": "delayed",
+        "pending_with": "Supplier",
+        "expense_type": "CAPEX",
+        "raw_row_text": "IBS 1447 (ESM + RF) SPG - HPG Supplier CAPEXDELAYED 67,519,408 Mobility Services"
+      },
+      {
+        "initiative_name": "BFM – EBU Demand 2025 – Q3 - Tribe - Solutions AA - DA TA-Domain CAPEXDELAYED",
+        "domain": "Billing & Fulfilment Management",
+        "budget_sar": 3148279,
+        "status": "delayed",
+        "pending_with": "TA-Domain",
+        "expense_type": "CAPEX",
+        "raw_row_text": "BFM – EBU Demand 2025 – Q3 - Tribe - Solutions AA - DA TA-Domain CAPEXDELAYED 3,148,279 Billing & Fulfilment Management"
+      },
+      {
+        "initiative_name": "CorpE – CBU Demand – Tribe Q3 DA - AA TA-Domain CAPEXDELAYED",
+        "domain": "Corporate Enablement",
+        "budget_sar": 2935210,
+        "status": "delayed",
+        "pending_with": "TA-Domain",
+        "expense_type": "CAPEX",
+        "raw_row_text": "CorpE – CBU Demand – Tribe Q3 DA - AA TA-Domain CAPEXDELAYED 2,935,210 Corporate Enablement"
+      },
+      {
+        "initiative_name": "BFM – CBU Demand 2025 – Q3 - Tribe -TCS DA - AA TA-Domain CAPEXDELAYED",
+        "domain": "Billing & Fulfilment Management",
+        "budget_sar": 1622376,
+        "status": "delayed",
+        "pending_with": "TA-Domain",
+        "expense_type": "CAPEX",
+        "raw_row_text": "BFM – CBU Demand 2025 – Q3 - Tribe -TCS DA - AA TA-Domain CAPEXDELAYED 1,622,376 Billing & Fulfilment Management"
+      }
+    ]
+  },
+  "rfx_metrics_wk06_08": {
+    "WK-06": {
+      "total_received": 64,
+      "total_approved": 32,
+      "total_in_progress": 32,
+      "total_cf_projects": 21
+    },
+    "WK-07": {
+      "total_received": 75,
+      "total_approved": 37,
+      "total_in_progress": 38,
+      "total_cf_projects": 34
+    },
+    "WK-08": {
+      "total_received": 89,
+      "total_approved": 44,
+      "total_in_progress": 45,
+      "total_cf_projects": 44
+    }
+  }
+}

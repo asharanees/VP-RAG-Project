@@ -1,0 +1,105 @@
+**Summary of Overall Updates – Last 2 Weeks Reviewed**
+
+* **Week 08 – 25 Feb 2026**
+* **Week 07 – 18 Feb 2026**
+
+---
+
+# 1. Strategic & Architecture Initiatives
+
+**WK-08 (25 Feb 2026)**
+
+* Shared **IT Cloud Roadmap (2026–2029)** with Infrastructure Planning to support the 2026 deployment plan. 
+* Conducted **optical networks roadmap workshop with Nokia MEA** to align global technology trends with stc architecture roadmap. 
+* Contributed **technology strategy inputs** to the Strategy-to-Realization value chain design session. 
+
+**WK-07 (18 Feb 2026)**
+
+* Alignment with INFRA on **Legacy Modernization & Migration (LMM) strategy and 2026 action plan**. 
+* Initiated **Technology Strategy External Consultation project with Accenture**, with core team finalization targeted by **18-Mar**. 
+
+---
+
+# 2. Cloud, Infrastructure & Technology Programs
+
+**WK-08 (25 Feb 2026)**
+
+* Initiated **site forecasting automation deployment phase** using ML after validating the model. 
+* Held cross-sector meeting for **Tech-Refresh and migration to public cloud** to address outstanding architecture items. 
+* Conducted discussions with Infrastructure leadership on **Disaster Recovery architecture enhancements** to strengthen resiliency framework. 
+
+**WK-07 (18 Feb 2026)**
+
+* Completed **cloudification recommendation refresh** for sharing with the ITP team. 
+* Delivered **public cloud tagging architecture** to enable spend transparency and governance. 
+* Updated **resiliency guidelines documentation** and shared with management. 
+
+---
+
+# 3. Cost Optimization & Efficiency
+
+**WK-08 (25 Feb 2026)**
+
+* Successfully **phased out HCL Digital Experience and replaced it with Adobe Experience Manager**, achieving **4.7M SAR savings**. 
+* Ongoing **Cloud and Core Architecture cost optimization initiative** targeting contracts, licensing, BoQ modeling, and infrastructure sizing. 
+
+**WK-07 (18 Feb 2026)**
+
+* Achieved **3.747M SAR OPEX savings** by shortening the ADTRAN project timeline from 3 years to 2. 
+* Continued work on **Databricks TCO analysis** to evaluate ETL workload migration from Ab Initio and Teradata. 
+
+---
+
+# 4. Governance, Compliance & Enterprise Architecture
+
+**WK-08 (25 Feb 2026)**
+
+* Closed **25 compliance cases** and linked **150+ validated compliance cases with AI use-cases** aligned to the architecture roadmap. 
+* Continued **STAR enterprise architecture integration** and conducted awareness sessions for TSA teams. 
+
+**WK-07 (18 Feb 2026)**
+
+* Raised **21 new STAR-related non-compliance cases** across sectors and converted **24 waived cases to non-compliant** after waiver expiry. 
+* Continued maturity assessment and improvements for **S2R governance controls** with TEC and TSA teams. 
+
+---
+
+# 5. Key Technology Programs & Engagements
+
+**WK-08 (25 Feb 2026)**
+
+* Performed **NTN NB-IoT connectivity options analysis with OQ** for potential stc deployment. 
+* Finalized **GTU dashboard program cards** covering J2C and extended programs including sustainability and AI infrastructure initiatives. 
+* Provided feedback on **2G shutdown metrics**, pending Telecom Committee decision. 
+
+**WK-07 (18 Feb 2026)**
+
+* Coordinated **AST gateway spectrum planning for NTN D2D PoC** and established a cross-TU task force. 
+* Completed **GSMA ISAG standards voting**, strengthening stc participation in global standards governance. 
+
+---
+
+# 6. RFx Pipeline Progress
+
+* **WK-08 (25 Feb 2026)**
+
+  * **89 RFPs received in 2026** with **44 approved projects in progress**. 
+
+* **WK-07 (18 Feb 2026)**
+
+  * **75 RFPs received in 2026** with **37 approved projects in progress**. 
+
+➡ Indicates **continued growth in the RFP pipeline between WK-07 and WK-08**.
+
+---
+
+✅ **Overall Trend (WK-07 → WK-08)**
+
+* Increased activity in **RFP pipeline and project execution**.
+* Continued focus on **cloud strategy, cost optimization, and governance maturity**.
+* Progress in **AI, compliance automation, and enterprise architecture integration (STAR)**.
+* Ongoing strategic initiatives around **NTN connectivity, 2G shutdown planning, and cloud modernization**.
+
+---
+
+If needed, I can also produce a **1-paragraph executive summary suitable for VP/GCTO reporting**.
