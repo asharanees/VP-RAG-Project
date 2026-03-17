@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: WhatsApp RAG assistant on AWS (API Gateway + Lambda + S3 Vectors + DynamoDB + Gemini)
+Description: WhatsApp AI Reporting Assistant (structured JSON, no embeddings)
 
 Globals:
   Function:
@@ -15,25 +15,14 @@ Globals:
       CostProfile: minimum-cost-high-quality
     Environment:
       Variables:
-        CHUNKS_TABLE_NAME: unused
-        S3_VECTORS_BUCKET: !Ref S3VectorsBucketName
-        S3_VECTORS_INDEX: !Ref S3VectorsIndexName
         SOURCE_BUCKET_NAME: !Sub vp-rag-project-source-${AWS::AccountId}-${AWS::Region}
         STRUCTURED_REPORTS_KEY: structured/structured_reports.json
         PRIMARY_PROVIDER: !Ref PrimaryProvider
-        # Secret values injected directly as env vars — no Secrets Manager calls needed
         VP_RAG_PROJECT_META_WHATSAPP: !Ref MetaWhatsappSecret
         VP_RAG_PROJECT_META_WEBHOOK_VERIFY: !Ref WebhookVerifySecret
         VP_RAG_PROJECT_GEMINI_API: !Ref GeminiApiSecret
         GENERATION_MODEL: !Ref GenerationModel
-        EMBEDDING_MODEL: !Ref EmbeddingModel
         FALLBACK_GENERATION_MODEL: !Ref FallbackGenerationModel
-        FALLBACK_EMBEDDING_MODEL: !Ref FallbackEmbeddingModel
-        TOP_K: 5
-        MIN_CONTEXT_CHUNKS: 3
-        MAX_CONTEXT_CHUNKS: 5
-        CHUNK_SIZE_TOKENS: 700
-        CHUNK_OVERLAP_TOKENS: 100
         WHATSAPP_GRAPH_VERSION: v22.0
 
 Parameters:
@@ -56,21 +45,9 @@ Parameters:
   GenerationModel:
     Type: String
     Default: us.anthropic.claude-3-5-haiku-20241022-v1:0
-  EmbeddingModel:
-    Type: String
-    Default: amazon.titan-embed-text-v2:0
   FallbackGenerationModel:
     Type: String
     Default: gemini-2.5-flash
-  FallbackEmbeddingModel:
-    Type: String
-    Default: gemini-embedding-001
-  S3VectorsBucketName:
-    Type: String
-    Default: vp-rag-project-vectors
-  S3VectorsIndexName:
-    Type: String
-    Default: vp-rag-project-pdf-index
 
 
 Resources:

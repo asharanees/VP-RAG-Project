@@ -51,12 +51,19 @@ def _normalize_whatsapp_text(text: str) -> str:
             if cleaned_lines and cleaned_lines[-1] != "":
                 cleaned_lines.append("")
             continue
-        line = re.sub(r"^[*•]\s+", "- ", line)
-        line = re.sub(r"\s+", " ", line)
-        line = re.sub(r"\*{2,}", "*", line)
-        line = re.sub(r"\*(.*?)\*", r"\1", line)
+        # Convert markdown bullet points to dashes
+        line = re.sub(r"^[•]\s+", "- ", line)
+        # Collapse markdown **bold** → *bold* (WhatsApp bold syntax)
+        line = re.sub(r"\*\*(.*?)\*\*", r"*\1*", line)
+        # Collapse markdown ### headings → *Heading* (WhatsApp bold)
+        line = re.sub(r"^#{1,3}\s+(.*)", r"*\1*", line)
+        # Collapse 3+ asterisks to 1
+        line = re.sub(r"\*{3,}", "*", line)
+        # Collapse lone asterisk lines
         if line.strip() == "*":
             continue
+        # Normalize whitespace within line
+        line = re.sub(r"\s+", " ", line).strip()
         cleaned_lines.append(line)
 
     text = "\n".join(cleaned_lines).strip()
