@@ -21,6 +21,7 @@ Globals:
         VP_RAG_PROJECT_META_WHATSAPP: !Ref MetaWhatsappSecret
         VP_RAG_PROJECT_META_WEBHOOK_VERIFY: !Ref WebhookVerifySecret
         VP_RAG_PROJECT_GEMINI_API: !Ref GeminiApiSecret
+        TAVILY_API_KEY: !Ref TavilyApiKey
         GENERATION_MODEL: !Ref GenerationModel
         FALLBACK_GENERATION_MODEL: !Ref FallbackGenerationModel
         WHATSAPP_GRAPH_VERSION: v22.0
@@ -42,9 +43,11 @@ Parameters:
     NoEcho: true
     Default: "{}"
     Description: JSON string with api_key for Gemini (optional)
-  GenerationModel:
+  TavilyApiKey:
     Type: String
-    Default: us.anthropic.claude-3-5-haiku-20241022-v1:0
+    NoEcho: true
+    Default: ""
+    Description: Tavily API key for web search (optional)
   FallbackGenerationModel:
     Type: String
     Default: gemini-2.5-flash

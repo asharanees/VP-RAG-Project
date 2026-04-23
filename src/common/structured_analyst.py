@@ -1387,8 +1387,37 @@ def classify_query_intent(query: str) -> Dict[str, Any]:
     q = (query or "").lower().strip()
     if ("gcto" in q and "update" in q) or re.search(r"\bshow\s+gcto\s+updates?\b", q):
         return {"intent": "gcto_updates"}
-    if any(k in q for k in ["rfp", "rfx"]) and "status" in q:
-        return {"intent": "rfx_status"}
+    # Web search intent — questions about external knowledge not in the reports
+    _WEB_PATTERNS = re.compile(
+        r"\b(current\s+(price|rate|cost|exchange|usd|sar|dollar)|"
+        r"latest\s+news|what\s+is\s+the\s+(price|rate|cost)\s+of|"
+        r"how\s+much\s+does\s+.+\s+cost|"
+        r"databricks\s+pricing|aws\s+pricing|azure\s+pricing|"
+        r"stock\s+price|market\s+cap|"
+        r"weather|today.s\s+(news|update)|"
+        r"who\s+is\s+the\s+(ceo|cto|president)|"
+        r"when\s+was\s+.+\s+founded|"
+        r"what\s+country|what\s+city|where\s+is)\b",
+        re.IGNORECASE,
+    )
+    if _WEB_PATTERNS.search(q):
+        return {"intent": "web_search"}
+    # Also route to web search if query explicitly asks to search the web
+    if any(k in q for k in ["search the web", "google", "search online", "look up online", "web search"]):
+        return {"intent": "web_search"}
+    if any(k in q for k in ["cost saving", "cost savings", "savings", "opex saving", "capex saving",
+                              "money saved", "cost reduction", "cost optimize", "cost optimiz"]):
+        return {"intent": "cost_savings"}
+    # RFX/RFP numeric queries — must route to rfx_status so metrics are populated
+    if any(k in q for k in ["rfp", "rfx"]):
+        if any(k in q for k in ["status", "how many", "count", "received", "in progress",
+                                  "in-progress", "approved", "delayed", "number of",
+                                  "progress", "update", "pipeline", "latest", "overview",
+                                  "summary", "report", "metrics", "numbers"]):
+            return {"intent": "rfx_status"}
+        # Bare RFP/RFX query with no other qualifier → default to rfx_status
+        if len(q.split()) <= 5:
+            return {"intent": "rfx_status"}
     if any(k in q for k in ["delayed", "pending initiative", "pending initiatives"]):
         return {"intent": "delayed_initiatives"}
     if "hot topic" in q or "major hot topic" in q:
@@ -1399,7 +1428,10 @@ def classify_query_intent(query: str) -> Dict[str, Any]:
         return {"intent": "progress_comparison"}
     if "risk" in q:
         return {"intent": "risk_analysis"}
-    # Detect topic-specific queries: short focused questions about a named subject
+    if any(k in q for k in ["weekly summary", "weekly digest", "overall update", "overall updates",
+                              "summary of", "week summary", "weekly update", "weekly updates",
+                              "all sections", "full update", "full summary"]):
+        return {"intent": "weekly_summary"}
     # that don't match any structured section intent — search all sections for the keyword
     _TOPIC_TRIGGERS = re.compile(
         r"\b(update on|status of|progress on|what about|tell me about|show me|any news on)\b",
@@ -1427,9 +1459,22 @@ def resolve_target_weeks(query: str, available_weeks: List[str], intent: str) ->
         return []
 
     q = (query or "").lower()
+
+    # Cross-week analysis queries need all weeks
+    _ALL_WEEKS_PATTERNS = re.compile(
+        r"\b(consistently|across\s+(all|most|every)\s+weeks?|most\s+weeks?|all\s+weeks?|"
+        r"every\s+week|throughout|across\s+weeks?|week.over.week|week\s+by\s+week)\b",
+        re.IGNORECASE,
+    )
+    if _ALL_WEEKS_PATTERNS.search(q):
+        return ordered
+
     explicit = sorted({f"WK-{int(m):02d}" for m in re.findall(r"wk[-\s]?(\d{1,2})", q)}, key=lambda wk: int(re.search(r"(\d+)", wk).group(1)))
     if explicit:
         return [wk for wk in explicit if wk in ordered] or explicit
+
+    if intent == "cost_savings":
+        return ordered  # always all weeks — savings are scattered throughout
 
     last_n_match = re.search(r"last\s+(\d{1,2})\s+weeks?", q)
     if last_n_match:
@@ -1447,11 +1492,11 @@ def resolve_target_weeks(query: str, available_weeks: List[str], intent: str) ->
         return ordered[-1:]
 
     if intent == "weekly_summary":
-        return ordered[-2:]
+        return ordered[-4:]
     if intent in {"progress_comparison", "trend_analysis"}:
-        return ordered[-3:]
+        return ordered[-5:]
     if intent == "delayed_initiatives":
-        return ordered[-8:]
+        return ordered[-11:]  # ~3 months = all available weeks
     if intent == "topic_search":
         return ordered[-3:]
     return ordered[-1:]
@@ -1495,10 +1540,10 @@ def get_structured_context(intent: str, target_weeks: List[str], structured_data
             continue
 
         if intent == "weekly_summary":
-            for sec in ["weekly_digest", "key_projects_hot_topics", "cost_optimization", "executive_summary_rfx_cost", "gcto_updates"]:
+            for sec in ["weekly_digest", "key_projects_hot_topics", "gcto_updates"]:
                 value = sections.get(sec, "")
                 if value:
-                    evidence.append(f"{week} | {SECTION_NAME_TO_TITLE[sec]} | {value[:1000]}")
+                    evidence.append(f"{week} | {SECTION_NAME_TO_TITLE[sec]} | {value[:500]}")
 
         elif intent == "hot_topics":
             for sec in ["weekly_digest", "key_projects_hot_topics"]:
@@ -1508,22 +1553,81 @@ def get_structured_context(intent: str, target_weeks: List[str], structured_data
 
         elif intent == "rfx_status":
             status = sections.get("rfx_status", {}) or {}
+            received = status.get("total_received")
+            approved = status.get("total_approved")
+            in_progress = status.get("total_in_progress")
+            cf_projects = status.get("total_cf_projects")
             metrics[week] = {
-                "total_received": status.get("total_received"),
-                "total_approved": status.get("total_approved"),
-                "total_in_progress": status.get("total_in_progress"),
-                "total_cf_projects": status.get("total_cf_projects"),
+                "total_received": received,
+                "total_approved": approved,
+                "total_in_progress": in_progress,
+                "total_cf_projects": cf_projects,
             }
+            # Always inject a plain-text summary of the key numbers so the LLM
+            # sees them directly in evidence (not just in the metrics block)
+            struct = sections.get("rfx_status_struct", {}) or {}
+            overview = struct.get("overview", {}) or {}
+            week_delayed_rows = sections.get("delayed_rfps", []) or []
+            numeric_summary = (
+                f"RFPs received in 2026: {received}. "
+                f"Approved projects: {approved}. "
+                f"In-progress RFPs: {in_progress}. "
+                f"CF projects: {cf_projects}. "
+                f"Total 2026 projects: {overview.get('projects_2026', 'N/A')}. "
+                f"Delayed RFPs this week: {len(week_delayed_rows)}."
+            )
+            evidence.append(f"{week} | RFx Status Numbers | {numeric_summary}")
             raw = status.get("raw_section_text", "")
             if raw:
-                evidence.append(f"{week} | RFx Status | {raw[:1000]}")
-            delayed_rows.extend(sections.get("delayed_rfps", []) or [])
+                evidence.append(f"{week} | RFx Status | {raw[:800]}")
+            delayed_rows.extend(week_delayed_rows)
+
+        elif intent == "cost_savings":            # Extract only sentences/lines containing savings amounts
+            import re as _re
+            _SAVINGS_KW = ["saving", "saved", "msar", "cost reduction", "opex reduction",
+                           "capex saving", "cost saving", "cost optimiz", "sar savings",
+                           "realized saving", "achieved saving", "cost saved"]
+            _SAR_AMOUNT_RE = _re.compile(
+                r'\d+[\.,]?\d*\s*(?:m\s*sar|msar|k\s*sar|sar|m\b)', re.IGNORECASE
+            )
+            for sec in ["weekly_digest", "key_projects_hot_topics"]:
+                value = sections.get(sec, "")
+                if not value:
+                    continue
+                # Join adjacent lines into sliding windows of 3 to catch multi-line savings
+                raw_lines = [l.strip() for l in value.splitlines() if l.strip()]
+                savings_snippets = []
+                for i, line in enumerate(raw_lines):
+                    # Create a window of this line + next 2 lines
+                    window = " ".join(raw_lines[i:i+3])
+                    window_lower = window.lower()
+                    if (any(kw in window_lower for kw in _SAVINGS_KW)
+                            and _SAR_AMOUNT_RE.search(window_lower)
+                            and len(window) > 10):
+                        snippet = window[:200]
+                        if snippet not in savings_snippets:
+                            savings_snippets.append(snippet)
+                if savings_snippets:
+                    combined = " || ".join(savings_snippets[:6])
+                    evidence.append(f"{week} | Cost Savings | {combined[:800]}")
 
         elif intent == "delayed_initiatives":
             delayed_rows.extend(sections.get("delayed_rfps", []) or [])
             extra = sections.get("executive_summary_rfx_cost", "")
             if extra:
                 evidence.append(f"{week} | Executive Summary – RFx & Cost Optimization | {extra[:900]}")
+            # Also include key_projects for pending strategic initiatives (non-RFP blockers)
+            kp = sections.get("key_projects_hot_topics", "")
+            if kp:
+                kp_lower = kp.lower()
+                _PENDING_KW = [
+                    "pending", "not yet", "awaiting", "blocked", "no progress",
+                    "not initiated", "deferred", "postponed", "unable to progress",
+                    "limited engagement", "not formally", "remains pending",
+                    "validation", "approval pending", "under review",
+                ]
+                if any(kw in kp_lower for kw in _PENDING_KW):
+                    evidence.append(f"{week} | Key Projects & Hot Topics | {kp[:600]}")
 
         elif intent == "risk_analysis":
             for sec in ["weekly_digest", "key_projects_hot_topics", "executive_summary_rfx_cost"]:
@@ -1534,11 +1638,13 @@ def get_structured_context(intent: str, target_weeks: List[str], structured_data
 
         elif intent in {"progress_comparison", "trend_analysis"}:
             status = sections.get("rfx_status", {}) or {}
+            week_delayed_rows = sections.get("delayed_rfps", []) or []
             metrics[week] = {
                 "total_received": status.get("total_received"),
                 "total_approved": status.get("total_approved"),
                 "total_in_progress": status.get("total_in_progress"),
                 "total_cf_projects": status.get("total_cf_projects"),
+                "delayed_count": len(week_delayed_rows),
             }
             if status.get("raw_section_text"):
                 evidence.append(f"{week} | RFx Status | {status.get('raw_section_text')[:900]}")
@@ -1546,15 +1652,24 @@ def get_structured_context(intent: str, target_weeks: List[str], structured_data
                 value = sections.get(sec, "")
                 if value:
                     evidence.append(f"{week} | {SECTION_NAME_TO_TITLE[sec]} | {value[:800]}")
-            delayed_rows.extend(sections.get("delayed_rfps", []) or [])
+            delayed_rows.extend(week_delayed_rows)
 
         else:
             # topic_search or fact_lookup: scan ALL content sections for the query keyword
             # Extract meaningful keywords (skip stop words)
+            # Note: min length is 2 to catch short but meaningful terms like "cv", "ia"
             _STOP = {"what", "is", "the", "are", "on", "in", "of", "for", "and", "or",
                      "a", "an", "me", "my", "any", "tell", "show", "give", "about",
-                     "update", "status", "progress", "latest", "recent", "current"}
-            topic_words = [w for w in (query or "").lower().split() if len(w) > 2 and w not in _STOP]
+                     "update", "status", "progress", "latest", "recent", "current",
+                     "how", "many", "were", "was", "did", "has", "have", "been",
+                     "made", "it", "to", "as", "at", "by", "its", "with", "from"}
+            topic_words = [w for w in (query or "").lower().split() if len(w) >= 2 and w not in _STOP]
+            # Expand compound terms: "tech-refresh" → also match "tech" and "refresh"
+            expanded = set(topic_words)
+            for w in list(topic_words):
+                if "-" in w:
+                    expanded.update(w.split("-"))
+            topic_words = list(expanded)
             all_sections = [
                 "gcto_updates",
                 "weekly_digest",
@@ -1587,6 +1702,27 @@ def get_structured_context(intent: str, target_weeks: List[str], structured_data
             deduped.append(row)
         delayed_rows = deduped[:12]
 
+    # Build cross-week RFP consistency map when multiple weeks are in scope
+    # This lets the LLM answer "which RFP appeared in the most weeks"
+    if len(target_weeks) > 1 and intent in {"rfx_status", "delayed_initiatives", "progress_comparison", "trend_analysis"}:
+        consistency: Dict[str, int] = {}
+        for wk in target_weeks:
+            if wk not in week_map:
+                continue
+            for row in (week_map[wk]["sections"].get("delayed_rfps", []) or []):
+                name = (row.get("initiative_name") or row.get("sub_rfp_name") or "").strip()
+                if name:
+                    consistency[name] = consistency.get(name, 0) + 1
+        if consistency:
+            top = sorted(consistency.items(), key=lambda x: x[1], reverse=True)[:5]
+            consistency_lines = [f"{name} (appeared in {count} weeks)" for name, count in top]
+            consistency_entry = (
+                "Cross-week | Delayed RFP Consistency | Most consistently delayed: "
+                + "; ".join(consistency_lines)
+            )
+            # Insert at the front so the LLM sees it before the budget-sorted list
+            evidence.insert(0, consistency_entry)
+
     return {
         "intent": intent,
         "target_weeks": target_weeks,
@@ -1602,9 +1738,10 @@ def _format_metrics(metrics: Dict[str, Any]) -> str:
     lines: List[str] = []
     for week in sorted(metrics.keys(), key=lambda wk: int(re.search(r"(\d+)", wk).group(1))):
         row = metrics.get(week, {})
+        delayed_part = f", delayed={row['delayed_count']}" if row.get("delayed_count") is not None else ""
         lines.append(
             f"- {week}: received={row.get('total_received')}, approved={row.get('total_approved')}, "
-            f"in_progress={row.get('total_in_progress')}, cf_projects={row.get('total_cf_projects')}"
+            f"in_progress={row.get('total_in_progress')}, cf_projects={row.get('total_cf_projects')}{delayed_part}"
         )
     return "\n".join(lines)
 
@@ -1623,6 +1760,17 @@ def build_structured_prompt(query: str, intent: str, context: Dict[str, Any]) ->
         )
     delayed_block = "\n".join(delayed_lines) if delayed_lines else "- None"
 
+    # Pull out the consistency line from evidence and put it in its own block
+    # so it's never trimmed by the prompt budget
+    consistency_block = ""
+    filtered_evidence = []
+    for e in evidence[:24]:
+        if e.startswith("Cross-week | Delayed RFP Consistency"):
+            consistency_block = e.split("|", 2)[-1].strip()
+        else:
+            filtered_evidence.append(e)
+    evidence = filtered_evidence
+
     instruction_map = {
         "gcto_updates": (
             "Output exactly: Latest GCTO Updates (WK-XX) followed by one bullet per card. "
@@ -1635,32 +1783,87 @@ def build_structured_prompt(query: str, intent: str, context: Dict[str, Any]) ->
             "current status, and any relevant metrics or owners. If the topic appears in multiple sections, "
             "combine the information. Do not limit to one section."
         ),
-        "weekly_summary": "Output sections: Scope Reviewed, grouped updates by section/theme, Risks / Constraints, Executive Summary.",
-        "hot_topics": "Output sections: Major Hot Topics, 5 to 8 grouped themes, Cross-Week Themes, Executive Summary.",
-        "rfx_status": "Output sections: latest week reviewed, total received, total approved, total in-progress, CF projects, top delayed high-budget RFPs, data gaps, strategic note.",
-        "delayed_initiatives": "Output sections: repeated delayed items, top budgets, affected domains, key bottlenecks.",
-        "progress_comparison": "Output sections: RFP Pipeline Progress, Approved / In-Progress trend, Key progress shifts by week, Risks / Constraints, Executive Summary.",
-        "trend_analysis": "Output sections: Key Trends, Major Anomalies, Risks, Executive Summary.",
-        "risk_analysis": "Output concise risk analysis with key constraints and decision implications.",
-        "fact_lookup": "Answer directly with concise, factual bullets.",
+        "weekly_summary": (
+            "VP-level weekly summary. Structure as: one section per week (WK-XX label), each with 3-5 "
+            "bullet points covering the most significant developments — decisions made, savings achieved, "
+            "risks escalated, milestones hit or missed. End with a 2-line Executive Takeaway covering "
+            "the most critical item and any action required. Be concise and factual. No filler phrases. "
+            "IMPORTANT: Every week in the scope MUST have a section. If evidence exists for a week, "
+            "extract highlights from it — do NOT say 'not available'. "
+            "The weekly digest evidence starts with a number (e.g. '1\\nTU Data Center Strategy') — "
+            "ignore the leading number and treat the rest as the digest content."
+        ),
+        "hot_topics": (
+            "VP-level hot topics brief. List 5-8 themes with the most strategic significance. "
+            "For each: one line on what happened, one line on implication or next step. "
+            "End with top 2 items requiring VP attention."
+        ),
+        "rfx_status": (
+            "VP-level RFX status. Lead with the headline numbers (received, approved, in-progress, delayed). "
+            "Call out week-over-week change if multiple weeks in scope. "
+            "List top 3 delayed RFPs by budget with owner and blocker. "
+            "If the user asks which RFP has been delayed the most weeks, answer using the "
+            "'Cross-week RFP consistency analysis' section — NOT the budget-sorted list. "
+            "End with one-line strategic note on pipeline health."
+        ),
+        "delayed_initiatives": (
+            "VP-level delayed initiatives report. Two sections: "
+            "1) RFP Delays — list by budget descending, include domain, pending-with, and how many weeks delayed. "
+            "2) Strategic Pending Items — non-RFP initiatives that are blocked, not yet initiated, or awaiting decision. "
+            "End with total budget at risk and top bottleneck (TA-Domain vs Supplier split)."
+        ),
+        "progress_comparison": (
+            "VP-level progress comparison. Show a clean week-by-week table: received / approved / in-progress / delayed. "
+            "Highlight the biggest positive shift and the biggest concern. "
+            "Call out any anomalies (e.g. sharp drop in CF projects, spike in delays). "
+            "End with one-line trajectory assessment."
+        ),
+        "trend_analysis": (
+            "VP-level trend analysis. Lead with 3 key trends (positive) and 2 anomalies or risks. "
+            "Use specific numbers. Flag any metric moving in the wrong direction. "
+            "End with recommended focus areas for next week."
+        ),
+        "risk_analysis": (
+            "VP-level risk brief. List risks by severity. For each: what it is, current status, owner if known, "
+            "and recommended action. Flag any risk with no mitigation plan."
+        ),
+        "web_search": (
+            "The user asked about external information. Answer using the web search results provided. "
+            "Be concise and factual. Cite the source URL if available. "
+            "If the results don't answer the question, say so clearly."
+        ),
+        "cost_savings": (
+            "VP-level cost savings summary. List all confirmed savings by week in chronological order. "
+            "For each: week label, initiative name, SAR amount, type (OPEX/CAPEX/cost reduction). "
+            "End with total confirmed savings across all weeks. "
+            "Only include savings with explicit SAR amounts — do not include 0.0M or placeholder values."
+        ),
+        "fact_lookup": (
+            "Answer directly with the specific fact requested. One or two lines maximum. "
+            "Include the source week. If the data is not in the evidence, say so explicitly."
+        ),
     }
 
     return (
-        "You are a structured weekly-report analyst for telecom executive leadership.\n"
-        "Use only the provided structured evidence.\n"
+        "You are a senior executive reporting assistant briefing a VP of Technology Strategy.\n"
+        "Use only the provided structured evidence. Be concise, precise, and decision-oriented.\n"
         "Rules:\n"
         "- Use correct weeks only.\n"
-        "- Never guess missing metrics; say missing explicitly.\n"
-        "- Preserve numeric values exactly.\n"
-        "- Format output for WhatsApp: use *bold* for section headings and important numbers/names.\n"
-        "- Use - for bullet points. Keep lines short and scannable.\n"
-        "- Avoid raw dumping and broken fragments.\n"
+        "- Never guess missing metrics; say 'not available in the report' explicitly.\n"
+        "- Preserve numeric values exactly as they appear in the evidence.\n"
+        "- CRITICAL: Preserve negative statements exactly. If the evidence says 'no progress recorded' or 'not yet initiated', report that verbatim — never rephrase as positive.\n"
+        "- CRITICAL: Never add details, context, or explanations that are not explicitly stated in the evidence. If it is not in the evidence, do not say it.\n"
+        "- If a specific week is asked about, only use evidence from that week. Do not pull data from other weeks.\n"
+        "- Format output for WhatsApp: use *bold* for section headings, week labels, and key numbers.\n"
+        "- Use - for bullet points. Keep lines short and scannable. No filler phrases like 'here is your summary' or 'would you like more details'.\n"
+        "- Currency is always SAR. Never use ₽ or $ symbols.\n"
         f"Intent: {intent}\n"
         f"Scope weeks: {', '.join(target_weeks) if target_weeks else 'N/A'}\n"
         f"Output guidance: {instruction_map.get(intent, instruction_map['fact_lookup'])}\n\n"
         f"User Query:\n{query}\n\n"
-        f"Metrics by week:\n{_format_metrics(metrics)}\n\n"
-        f"Top delayed RFP rows:\n{delayed_block}\n\n"
+        + (f"Cross-week RFP consistency analysis:\n{consistency_block}\n\n" if consistency_block else "")
+        + f"Metrics by week:\n{_format_metrics(metrics)}\n\n"
+        f"Top delayed RFP rows (sorted by budget):\n{delayed_block}\n\n"
         "Structured evidence:\n"
         + "\n".join([f"- {line}" for line in evidence[:24]])
     )

@@ -1,0 +1,427 @@
+[26/03/2026, 5:55:34 PM] Muhammad Ashar Anis: How many RFPs were received in 2026 as of WK-08?
+[26/03/2026, 5:55:47 PM] TSA AI Reporting Agent: *Weekly RFx Status Report - WK-08*
+
+*Total RFPs Received*:
+- *89 RFPs* received in 2026
+
+*Project Status Breakdown*:
+- *Approved*: 44 projects
+- *In-Progress*: 45 projects
+- *CF Projects*: 44
+
+*Top Delayed High-Budget RFPs*:
+- Group ERP transformation | *Budget*: SAR 765,000,000
+- TSS Fixed - Nokia | *Budget*: SAR 146,080,503
+- Internal-Wireless Network Improvements 2025 | *Budget*: SAR 67,519,408
+- Spare Parts for Network | *Budget*: SAR 50,600,000
+- Huawei Spare Parts for Transmission | *Budget*: SAR 36,000,000
+
+*Strategic Note*:
+- Total delayed RFPs this week: 19
+- Most delays pending with: Supplier and TA-Domain
+
+*Data Gaps*: None identified
+
+*Recommendation*: Monitor delayed high-budget RFPs for potential timeline and budget risks.
+[26/03/2026, 5:55:56 PM] Muhammad Ashar Anis: How many delayed RFPs were listed in WK-08, and what is the largest one by budget?
+[26/03/2026, 5:56:02 PM] TSA AI Reporting Agent: *WK-08 RFx Status Report*
+
+*Latest Week Overview:*
+- Total RFPs received: *89*
+- Total approved: *44*
+- Total in-progress: *45*
+- CF projects: *44*
+- Delayed RFPs: *19*
+
+*Top Delayed High-Budget RFPs:*
+- *Largest Delayed RFP:* Group ERP transformation
+- Budget: *SAR 765,000,000*
+- Domain: AA - DA - IA - SPG
+- Status: Delayed
+- Pending with: Supplier
+- Expense Type: CAPEX
+
+*Other Significant Delayed RFPs:*
+- TSS Fixed - Nokia
+- Budget: *SAR 146,080,503*
+- Internal-Wireless Network Improvements 2025
+- Budget: *SAR 67,519,408*
+- Spare Parts for Network
+- Budget: *SAR 50,600,000*
+
+*Data Gaps:* None identified
+
+*Strategic Note:* Projects have PIB but not yet received by RFX Direct Value MPA
+[26/03/2026, 5:56:13 PM] Muhammad Ashar Anis: What were the key highlights in the weekly digest for WK-11?
+[26/03/2026, 5:56:23 PM] TSA AI Reporting Agent: *Weekly Digest for WK-11*
+
+*Scope Reviewed:*
+- TU Data Center Strategy
+- GEP Infrastructure Open Source
+- Ericsson Telco Cloud
+- REACH KPIs Target Setting
+- E2E Architecture & Blueprint Alignment
+- Enterprise Architecture (STAR)
+- Compliance Reporting
+
+*Key Highlights:*
+- *Data Center Strategy*: Finalized strategy enabling capacity expansion, regional coverage, improved latency, data localization, and enhanced resiliency
+- *GEP Infrastructure*: Presented Open-Source initiatives, alignment in progress for 2026 targets
+- *Ericsson Telco Cloud*: Completed assessment with executive view shared
+- *REACH KPIs*:
+- Set targets for 2026-2028
+- 58% target-setting completion to date
+- *Architecture Alignment*: Cross-domain alignment for 2G Shutdown, 5G SA, and NTN
+
+*Enterprise Architecture (STAR):*
+- Mapping and integration progressing
+- Conducted governance sessions across multiple departments
+- *Key Risks*:
+- Data readiness challenges
+- Limited team capacity
+- Undefined access processes
+
+*Compliance:*
+- Prepared February Monthly Compliance Report
+- Identified internal enhancement opportunities
+
+*Risks / Constraints:*
+- Resource constraints impacting acceleration
+- Undefined access processes
+- Limited team capacity
+
+*Executive Summary:*
+- *GCTO Special Project*:
+- Owner: *Sami H. Alzomaia*
+- Project: Circular Economy Principles Implementation
+- Due Date: *30 June 2026*
+
+*Financial Metrics:*
+- *Capex Savings 2026*: Not available
+- *Opex Savings 2026*: Not available
+- *Total Expenditure*: 0.0 M
+
+Note: Detailed financial metrics show 0.00 M or 0.0 M across various categories.
+[26/03/2026, 5:56:32 PM] Muhammad Ashar Anis: How many RFPs were received in 2026 as of WK-11, and how many are in progress?
+[26/03/2026, 5:56:39 PM] TSA AI Reporting Agent: *WK-11 RFx Status Report*
+
+*Total RFPs Received:* 110
+*Total Approved:* 58
+*Total In-Progress:* 49
+*CF Projects:* 25
+
+*Top Delayed High-Budget RFPs:*
+- Group ERP Transformation | *Budget:* SAR 765,000,000
+- Internal-Wireless Network Improvements 2025 | *Budget:* SAR 67,519,408
+- Telco Cloud Infrastructure expansions 2025 | *Budget:* SAR 6,300,000
+- CorpE – EBU Demand – Tribe Q3 | *Budget:* SAR 5,445,429
+- CorpE – CBU Demand – Tribe Q3 | *Budget:* SAR 2,935,210
+
+*Strategic Note:*
+- Total 2026 projects: 85
+- Delayed RFPs this week: 5
+
+*Data Gaps:* None identified in the report
+
+*Additional Context:*
+- Projects with PIB but not yet received by RFX: 33
+- MPA Review status varies across different stages
+[26/03/2026, 5:56:41 PM] Muhammad Ashar Anis: What is the status of the "Circular Economy Principles" GCTO action item, and who is the owner?
+[26/03/2026, 5:56:48 PM] TSA AI Reporting Agent: Based on the structured evidence, here's the status of the "Circular Economy Principles" GCTO action item:
+
+*Circular Economy Principles Project*
+- *Owner*: Sami H. Alzomaia
+- *Title*: Develop a Proposal For Implementing Circular Economy Principles Across All Subsidiaries, Starting With It Services Offered By Solutions
+- *Due Date*: 30 June 2026
+- *Status*: On Track (consistently reported in WK-09, WK-10, and WK-11)
+
+*Additional Context*:
+- In WK-10, the *Group Strategic Sourcing* section noted:
+- 2026 strategic sourcing plan completed
+- Q1 circular economy opportunity analysis identified for three subsidiaries
+- Analysis shared with procurements
+
+*Key Observations*:
+- Project maintains "On Track" status across all reported weeks
+- No delays or issues mentioned
+- Progressing towards the June 2026 deadline
+[26/03/2026, 5:56:50 PM] Muhammad Ashar Anis: What OPEX saving was achieved in WK-07 related to the ADTAN/ADTRAN project, and how was it achieved?
+[26/03/2026, 5:56:58 PM] TSA AI Reporting Agent: *Weekly Report Analysis: WK-07*
+
+*Scope Reviewed:*
+- ADTAN/ADTRAN Project
+- Compliance & Governance Initiatives
+- Cost Optimization Efforts
+
+*Key Findings:*
+- *OPEX Savings*: *3.747M* achieved by shortening ADTAN project timeline
+- Project timeline reduced from three years to two years
+- Aligned with copper sunset strategy
+
+*Detailed Updates:*
+- Shortened project timeline resulted in direct OPEX savings
+- Strategy focused on accelerating project completion
+
+*Risks / Constraints:*
+- Not specified in the available evidence
+
+*Executive Summary:*
+- Significant OPEX optimization achieved through strategic project management
+- Demonstrates ability to compress project timelines and generate cost efficiencies
+
+*Additional Context:*
+- Specific mechanism of savings not detailed in the report
+- No supplementary metrics provided beyond the *3.747M* figure
+
+*Recommendation:*
+- Further investigation recommended to understand precise savings mechanism
+
+Note: Analysis based strictly on provided WK-07 evidence, with no external assumptions or interpretations added.
+[26/03/2026, 5:57:00 PM] Muhammad Ashar Anis: Which delayed RFP has the highest budget across all weeks, and what is the amount?
+[26/03/2026, 5:57:07 PM] TSA AI Reporting Agent: *Weekly RFx Status Report - WK-11*
+
+*Top Delayed High-Budget RFPs:*
+- *Highest Budget RFP*: Group ERP Transformation
+- Budget: *SAR 765,000,000*
+- Domain: AA - DA - IA - SPG
+- Status: Delayed
+- Pending With: Supplier
+- Expense Type: OPEX
+
+*Latest Week Metrics:*
+- Total RFPs Received: *110*
+- Total Approved: *58*
+- Total In-Progress: *49*
+- CF Projects: *25*
+- Total 2026 Projects: *85*
+- Delayed RFPs: *5*
+
+*Data Gaps:* None identified
+
+*Strategic Note:*
+- Projects have PIB but not yet received by RFx Direct Value
+- Envelope 2026: 33 projects
+- Envelope 2025: 10 projects
+
+The *Group ERP Transformation* RFP has the highest budget at *SAR 765,000,000*, which is currently delayed and pending with the Supplier.
+[26/03/2026, 5:57:09 PM] Muhammad Ashar Anis: In WK-09, what was the outcome of the "Agreement Optimization" initiative mentioned in the weekly digest
+[26/03/2026, 5:57:15 PM] TSA AI Reporting Agent: *Scope Reviewed:* WK-09 Agreement Optimization Initiative
+
+*Key Outcomes:*
+- Successfully consolidated *SEA & AIDS Content* square demand
+- *Realized saving of 700K SAR*
+
+*Additional Context:*
+- Optimization focused on agreement cost reduction
+- Specific consolidation of content square demand achieved
+
+*Executive Summary:*
+The Agreement Optimization initiative in WK-09 demonstrated tangible financial benefits, achieving a *700K SAR* cost saving through strategic consolidation efforts.
+
+*Risks / Constraints:*
+- No specific risks noted for this initiative in the current week's report
+
+*Supplemental Notes:*
+- Precise details of consolidation methodology not provided in evidence
+- Financial impact clearly quantified at *700K SAR*
+[26/03/2026, 5:57:18 PM] Muhammad Ashar Anis: What happened with the Databricks POC — what was the final outcome and what's the current status?
+[26/03/2026, 5:57:26 PM] TSA AI Reporting Agent: *Databricks POC Status - WK-10 Report*
+
+*Current Status:*
+- Completed both POCs functionally
+- *Pending Items:*
+- AI&DS still validating technical points
+- TCO and concurrency results under validation by stc
+- CS approvals pending for data offload stress testing from Databricks to Ter
+
+*Key Observations:*
+- POC is not fully closed
+- Multiple validation steps remain in progress
+- No final conclusive outcome reported in this week's evidence
+
+*Executive Summary:*
+The Databricks POC is in a transitional state with technical validations and approvals still outstanding. Cannot definitively state a final outcome based on the provided evidence.
+
+*Risks/Constraints:*
+- Technical validation ongoing
+- Approval processes not yet completed
+- Potential delays in final POC closure
+
+*Recommendation:*
+Await completion of current validation processes before making final determination.
+
+Note: This summary is strictly based on WK-10 evidence. No additional context or speculation has been added.
+[26/03/2026, 5:57:34 PM] Muhammad Ashar Anis: What are the key risks blocking STAR (EA Repository) progress right now?
+[26/03/2026, 5:57:41 PM] TSA AI Reporting Agent: *Risk Analysis: STAR (Enterprise Architecture Repository)*
+
+*Key Risks for Enterprise Architecture Repository:*
+- *Data Readiness*: Significant challenge identified
+- *Team Capacity*: Limited resources constraining acceleration
+- *Access Processes*: Currently undefined, blocking full implementation
+
+*Positive Progress Indicators:*
+- Architecture mapping and STAR integration actively progressing
+- Conducted cross-functional governance sessions with multiple domains
+- Reinforcing accountability through targeted engagement
+
+*Detailed Risk Context:*
+- Specific domains involved:
+- IT Platform
+- CSDM
+- AI&DS
+- SEA
+- Infrastructure
+- TSA
+- Architecture Guild
+
+*Acceleration Constraints:*
+- Post go-live momentum impeded by:
+- Undefined access protocols
+- Resource allocation limitations
+- Data preparation gaps
+
+*Recommendation:*
+Immediate focus needed on:
+- Clarifying access processes
+- Expanding team capacity
+- Completing data readiness initiatives
+
+*Note:* Detailed mitigation strategies not explicitly provided in current week's report.
+[26/03/2026, 5:57:44 PM] Muhammad Ashar Anis: What is the status of the Tech-Refresh and Migration to Public Cloud governance tracks as of WK-11?
+[26/03/2026, 5:57:53 PM] TSA AI Reporting Agent: Based on the provided evidence for WK-11, here's the status of Tech-Refresh and Migration to Public Cloud governance tracks:
+
+*Cloud & Infrastructure Governance Highlights*
+- *Data Center Strategy*:
+- Finalized strategy enabling capacity expansion, regional coverage, improved latency
+- Focuses on data localization and enhanced resiliency
+
+- *Cloud Migration Efforts*:
+- *Ericsson Telco Cloud*:
+- Completed assessment and options evaluation
+- Executive view shared to support decision-making
+
+- *Governance Alignment Activities*:
+- Presented Open-Source infrastructure initiatives to GEP
+- Alignment in progress with 2026 targets
+- Positioning as a Group-level initiative
+
+- *Architecture Governance*:
+- Cross-architecture domain alignment for:
+- 2G Shutdown
+- 5G SA
+- NTN (updating/refreshing architecture blueprint)
+
+*Enterprise Architecture Governance*:
+- STAR integration progressing
+- Conducted governance sessions across multiple domains:
+- IT Platform
+- CSDM
+- AI&DS
+- SEA
+- Infrastructure
+- TSA
+- Architecture Guild
+
+*Key Governance Challenges*:
+- Risks around data readiness
+- Limited team capacity
+- Undefined access processes
+- Resource constraints impacting acceleration
+
+Note: While cloud migration is mentioned, specific "Public Cloud" migration details are not explicitly provided in the WK-11 evidence.
+[26/03/2026, 5:57:54 PM] Muhammad Ashar Anis: How many CVs were reviewed for IA vacancies as of WK-09, and how many made it to final selection
+[26/03/2026, 5:58:00 PM] TSA AI Reporting Agent: Based on the provided structured evidence for *WK-09*, here's the summary for IA vacancies recruiting:
+
+*IA Vacancies Recruiting*:
+- First interview round for *Cloud Architect* position completed
+- *4 candidates* shortlisted for second round interview next week
+- *4 new candidates* interviewed for *Mobile Access Architect* role
+
+*Total CV Review*:
+- Not explicitly stated in the report how many total CVs were reviewed
+- Cannot definitively state how many made it to final selection
+
+*Note*: The report provides interview round details but does not specify total CV count or final selection numbers.
+[26/03/2026, 5:58:02 PM] Muhammad Ashar Anis: How has the number of delayed RFPs changed from WK-07 to WK-08 to WK-11?
+[26/03/2026, 5:58:10 PM] TSA AI Reporting Agent: *RFP Delayed Status Progression*
+
+*Latest Week Reviewed*: WK-11
+
+*Total RFP Metrics*:
+- Received: *110*
+- Approved: *58*
+- In-Progress: *49*
+- CF Projects: *25*
+
+*Delayed RFP Trend*:
+- WK-07: *10 delayed RFPs*
+- WK-08: *19 delayed RFPs* (+9 increase)
+- WK-11: *5 delayed RFPs* (-14 decrease from previous week)
+
+*Top Delayed High-Budget RFPs*:
+- Operation and maintenance of Transport network | *SAR 900,000,000*
+- Group ERP transformation | *SAR 765,000,000*
+- Operation and maintenance for COW Network | *SAR 161,160,000*
+- TSS Fixed - Nokia | *SAR 146,080,503*
+
+*Data Gaps*: None identified
+
+*Strategic Note*: Significant reduction in delayed RFPs from WK-08 to WK-11, with total count dropping from 19 to 5.
+[26/03/2026, 5:58:11 PM] Muhammad Ashar Anis: Which RFP has been consistently delayed across the most weeks — name it and its budget?
+[26/03/2026, 5:58:18 PM] TSA AI Reporting Agent: *Weekly RFP Status Report - WK-11*
+
+*Latest Week Overview:*
+- Total RFPs received: *110*
+- Total approved: *58*
+- Total in-progress: *49*
+- CF projects: *25*
+
+*Most Consistently Delayed High-Budget RFP:*
+- *Group ERP Transformation*
+- Budget: *SAR 765,000,000*
+- Status: *Delayed*
+- Pending with: *Supplier*
+
+*Top Delayed RFPs:*
+1. Group ERP Transformation | SAR *765,000,000*
+2. Internal-Wireless Network Improvements | SAR *67,519,408*
+3. Telco Cloud Infrastructure | SAR *6,300,000*
+4. CorpE – EBU Demand | SAR *5,445,429*
+5. CorpE – CBU Demand | SAR *2,935,210*
+
+*Data Gaps:* None identified
+
+*Strategic Note:*
+- 5 RFPs currently delayed
+- Total 2026 projects: *85*
+[26/03/2026, 5:58:19 PM] Muhammad Ashar Anis: What was the total OPEX saving achieved from the CEM platform migration in WK-02, and what was the technical change made?
+[26/03/2026, 5:58:26 PM] TSA AI Reporting Agent: *Weekly Report: WK-02 Summary*
+
+*Scope Reviewed:*
+- CEM Platform Migration
+- Technology Governance
+- Asset Management
+- Cost Optimization Initiatives
+
+*Key Updates:*
+- *CEM Platform Migration*
+- Migrated 80% of fixed CEM IT containers from VMware to containerized bare-metal platforms
+- *Achieved 80% cost reduction*
+
+*Technical Changes:*
+- Migrated IT containers to bare-metal containerized platforms
+
+*Risks / Constraints:*
+- Not available in the report
+
+*Executive Summary:*
+- Successful migration of CEM platform with significant cost optimization
+- Aligned with GCTO priorities and vendor strategy
+- Ongoing efforts in technology governance and asset management
+
+*Financial Metrics:*
+- *OPEX Saving: Not explicitly quantified in monetary terms*
+- CapEx Savings: SAR 00.00 M
+- OPEX Savings: 0.0 M
+
+*Note:* While the report indicates an 80% cost reduction, the exact monetary value is not specified in the WK-02 documentation.

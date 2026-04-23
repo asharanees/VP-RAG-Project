@@ -10,14 +10,10 @@ from common.gemini_client import GeminiClient
 from common.logger import get_logger
 from common.secrets import get_secret
 from common.settings import load_settings
+from common.agent_graph import run_graph
 from common.structured_analyst import (
-    build_structured_prompt,
-    classify_query_intent,
-    get_structured_context,
     load_structured_reports_json,
-    resolve_target_weeks,
 )
-from common.weekly_analyst import apply_prompt_budget
 from common.whatsapp_client import WhatsAppClient
 
 logger = get_logger(__name__)
@@ -28,8 +24,18 @@ _GREETING_RE = re.compile(
     re.IGNORECASE,
 )
 
-_GREETING_REPLY = (
-    "Hi! I am your AI Reporting Assistant.\n\n"
+# Phone number → display name mapping. Add more entries as needed.
+# Numbers should match the sender ID format from Meta (no + prefix, digits only).
+KNOWN_USERS: Dict[str, str] = {
+    "966547924981": "Anis",
+    "966530922088": "Usman",
+    "966530174097": "Abu Bilal",
+    "966565663662": "Abu Bandar",
+    "966533247804": "Ghulam",
+}
+
+_GREETING_REPLY_BODY = (
+    " I am your AI Reporting Assistant.\n\n"
     "You can ask me questions like:\n"
     "- Summary of overall updates from last 4 weeks\n"
     "- Insights into trends or anomalies in last 3 weeks\n"
@@ -40,6 +46,12 @@ _GREETING_REPLY = (
 
 def _is_greeting(text: str) -> bool:
     return bool(_GREETING_RE.match(text.strip()))
+
+
+def _build_greeting_reply(sender: str) -> str:
+    name = KNOWN_USERS.get(sender.lstrip("+"))
+    salutation = f"Hi {name}!" if name else "Hi!"
+    return salutation + _GREETING_REPLY_BODY
 
 
 def _normalize_whatsapp_text(text: str) -> str:
@@ -147,7 +159,7 @@ def lambda_handler(event: Dict[str, Any], _context: Any) -> Dict[str, Any]:
 
     # ── Greeting shortcut ─────────────────────────────────────────────────────
     if _is_greeting(user_text):
-        whatsapp.send_text_message(sender, _GREETING_REPLY)
+        whatsapp.send_text_message(sender, _build_greeting_reply(sender))
         logger.info("Sent greeting reply", extra={"extra": {"sender": sender}})
         return {"status": "ok", "reason": "greeting"}
 
@@ -189,54 +201,78 @@ def lambda_handler(event: Dict[str, Any], _context: Any) -> Dict[str, Any]:
         whatsapp.send_text_message(sender, "I don't have enough information.")
         return {"status": "ok", "reason": "no_structured_data"}
 
-    # ── Intent + context ──────────────────────────────────────────────────────
-    intent_result = classify_query_intent(user_text)
-    intent = intent_result.get("intent", "weekly_summary")
-    available_weeks = [r.get("week_label", "") for r in structured_reports if r.get("week_label")]
-    target_weeks = resolve_target_weeks(user_text, available_weeks, intent)
-    structured_context = get_structured_context(intent, target_weeks, structured_reports, user_text)
-
-    logger.info(
-        "Intent classified",
-        extra={"extra": {"correlation_id": correlation_id, "intent": intent, "target_weeks": target_weeks}},
-    )
-
-    # ── GCTO direct render (no LLM needed) ───────────────────────────────────
-    if intent == "gcto_updates":
-        evidence = structured_context.get("evidence", []) or []
-        latest_week = target_weeks[-1] if target_weeks else "WK-NA"
-        gcto_body = ""
-        for item in evidence:
-            parts = item.split("|", 2)
-            if len(parts) >= 3 and parts[2].strip():
-                gcto_body = parts[2].strip()
-                break
-
-        if gcto_body:
-            fields = _extract_gcto_fields(gcto_body)
-            direct_text = "\n".join([
-                f"Latest GCTO Updates ({latest_week})",
-                f"- Status: {fields['status']}",
-                f"- Owner: {fields['owner']}",
-                f"- Due Date: {fields['due_date']}",
-                f"- Update: {fields['update']}",
-            ])
-            final_text = _normalize_whatsapp_text(direct_text)
-            whatsapp.send_text_message(sender, final_text)
-            total_ms = int((time.perf_counter() - stage_start) * 1000)
-            logger.info(
-                "Answered (gcto direct)",
-                extra={"extra": {"sender": sender, "total_latency_ms": total_ms}},
-            )
-            return {"status": "ok", "reason": "gcto_direct"}
-
-    # ── LLM generation ────────────────────────────────────────────────────────
-    prompt = build_structured_prompt(user_text, intent, structured_context)
-    prompt = apply_prompt_budget(prompt, max_chars=6500)
-
     try:
-        generation = ai_client.generate_answer(prompt)
-        final_text = _normalize_whatsapp_text(_enforce_instruction_output(generation.text))
+        # ── Agent Graph (LangGraph orchestration) ────────────────────────────────
+        # run_graph() encapsulates the full agentic pipeline:
+        #   classify_intent → route_retriever → structured_rag/web_search
+        #   → merge_context → generate_answer → validate_answer → format_output
+        #
+        # If LangGraph is installed: runs as an explicit StateGraph with named nodes
+        # and conditional edges. If not: runs the same logic via manual fallback.
+        # Either way, behavior is identical — LangGraph is a structural choice.
+        graph_result = run_graph(
+            query=user_text,
+            sender=sender,
+            structured_reports=structured_reports,
+            ai_client=ai_client,
+            tavily_api_key=settings.tavily_api_key,
+        )
+
+        intent = graph_result.get("intent", "unknown")
+        target_weeks = graph_result.get("target_weeks", [])
+        evidence_count = graph_result.get("evidence_count", 0)
+        raw_answer = graph_result.get("final_answer", "")
+        graph_error = graph_result.get("error")
+
+        logger.info(
+            "Graph execution complete",
+            extra={"extra": {
+                "correlation_id": correlation_id,
+                "intent": intent,
+                "target_weeks": target_weeks,
+                "retrieval_source": graph_result.get("retrieval_source", "structured"),
+            }},
+        )
+
+        # ── GCTO direct render (no LLM needed) ───────────────────────────────────
+        # GCTO is handled inside the graph but we keep this fast-path for
+        # the structured card format which doesn't need LLM generation.
+        if intent == "gcto_updates" and not raw_answer:
+            from common.structured_analyst import (
+                classify_query_intent, get_structured_context, resolve_target_weeks
+            )
+            intent_result = classify_query_intent(user_text)
+            available_weeks = [r.get("week_label", "") for r in structured_reports if r.get("week_label")]
+            tw = resolve_target_weeks(user_text, available_weeks, intent)
+            structured_context = get_structured_context(intent, tw, structured_reports, user_text)
+            evidence = structured_context.get("evidence", []) or []
+            latest_week = tw[-1] if tw else "WK-NA"
+            gcto_body = ""
+            for item in evidence:
+                parts = item.split("|", 2)
+                if len(parts) >= 3 and parts[2].strip():
+                    gcto_body = parts[2].strip()
+                    break
+            if gcto_body:
+                fields = _extract_gcto_fields(gcto_body)
+                direct_text = "\n".join([
+                    f"Latest GCTO Updates ({latest_week})",
+                    f"- Status: {fields['status']}",
+                    f"- Owner: {fields['owner']}",
+                    f"- Due Date: {fields['due_date']}",
+                    f"- Update: {fields['update']}",
+                ])
+                final_text = _normalize_whatsapp_text(direct_text)
+                whatsapp.send_text_message(sender, final_text)
+                total_ms = int((time.perf_counter() - stage_start) * 1000)
+                logger.info("Answered (gcto direct)", extra={"extra": {"sender": sender, "total_latency_ms": total_ms}})
+                return {"status": "ok", "reason": "gcto_direct"}
+
+        # ── Deliver answer ────────────────────────────────────────────────────────
+        if graph_error and not raw_answer:
+            raise RuntimeError(graph_error)
+
+        final_text = _normalize_whatsapp_text(_enforce_instruction_output(raw_answer))
         send_stats = whatsapp.send_text_message(sender, final_text)
         total_ms = int((time.perf_counter() - stage_start) * 1000)
         logger.info(
@@ -248,7 +284,7 @@ def lambda_handler(event: Dict[str, Any], _context: Any) -> Dict[str, Any]:
                     "correlation_id": correlation_id,
                     "intent": intent,
                     "target_weeks": target_weeks,
-                    "evidence_count": len(structured_context.get("evidence", [])),
+                    "evidence_count": evidence_count,
                     "final_output_length": len(final_text),
                     "outbound_chunk_count": send_stats.get("chunk_count"),
                     "total_latency_ms": total_ms,
@@ -256,6 +292,7 @@ def lambda_handler(event: Dict[str, Any], _context: Any) -> Dict[str, Any]:
             },
         )
         return {"status": "ok"}
+
     except Exception:
         logger.exception("Generation or send failed")
         try:

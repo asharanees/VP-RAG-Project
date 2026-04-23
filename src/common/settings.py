@@ -28,6 +28,7 @@ class AppSettings:
     persona: str
     system_instructions: str
     whatsapp_graph_version: str
+    tavily_api_key: str
 
 
 DEFAULT_SYSTEM_INSTRUCTIONS = (
@@ -66,4 +67,5 @@ def load_settings() -> AppSettings:
         persona=os.getenv("CUSTOM_PERSONA", DEFAULT_PERSONA),
         system_instructions=os.getenv("SYSTEM_INSTRUCTIONS", DEFAULT_SYSTEM_INSTRUCTIONS),
         whatsapp_graph_version=os.getenv("WHATSAPP_GRAPH_VERSION", "v22.0"),
+        tavily_api_key=os.getenv("TAVILY_API_KEY", ""),
     )
