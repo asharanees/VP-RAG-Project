@@ -241,37 +241,56 @@ def validate_answer_node(state: AgentState) -> Dict[str, Any]:
     """
     Node 5: Answer Validation (confidence check)
     Checks if the generated answer is substantive.
-    If low confidence, the graph loops back to retry with broader context.
+
+    On first retry from structured RAG with low confidence:
+      → escalates to web search fallback automatically.
+    This means ANY question the reports can't answer gets a web search retry.
 
     This is the KEY node that demonstrates LangGraph's loop capability —
     something impossible to express cleanly in a linear pipeline.
     """
     answer = state.get("raw_answer", "")
     retry_count = state.get("retry_count", 0)
+    retrieval_source = state.get("retrieval_source", "structured")
 
-    # Simple heuristic: if answer is very short or says "not available", low confidence
+    # Signals that the structured RAG answer is insufficient
     low_confidence_signals = [
         len(answer.strip()) < 50,
         "not available" in answer.lower() and retry_count == 0,
+        "no information" in answer.lower() and retry_count == 0,
+        "cannot find" in answer.lower() and retry_count == 0,
+        "no details" in answer.lower() and retry_count == 0,
+        "i apologize" in answer.lower() and retry_count == 0,
+        "recommend checking" in answer.lower() and retry_count == 0,
         answer.strip() == "I don't have enough information.",
     ]
 
     confidence = "low" if any(low_confidence_signals) else "high"
-    return {
+
+    updates: Dict[str, Any] = {
         "confidence": confidence,
         "retry_count": retry_count + (1 if confidence == "low" else 0),
     }
+
+    # On first retry from structured RAG: escalate to web search
+    if confidence == "low" and retry_count == 0 and retrieval_source == "structured":
+        updates["retrieval_source"] = "web_search_fallback"
+
+    return updates
 
 
 def format_output_node(state: AgentState) -> Dict[str, Any]:
     """
     Node 6: Output Formatting
-    Applies WhatsApp-specific formatting to the raw answer.
-    Separated from generation so formatting can be changed independently.
+    Applies source attribution when the answer came from web search fallback.
     """
     answer = state.get("raw_answer", "")
-    # WhatsApp formatting is handled by _normalize_whatsapp_text in rag_worker
-    # Here we just pass through — the actual formatting happens at delivery
+    retrieval_source = state.get("retrieval_source", "structured")
+
+    # Add web search attribution when the answer came from fallback web search
+    if retrieval_source == "web_search_fallback" and answer and len(answer.strip()) > 20:
+        answer = f"Based on web search:\n\n{answer}"
+
     return {"final_answer": answer}
 
 
@@ -283,19 +302,35 @@ def route_retriever(state: AgentState) -> str:
     """
     Routing decision: which retriever to use?
 
-    structured → report-based questions (most queries)
-    web        → external knowledge questions (currency, pricing, news, etc.)
-    hybrid     → questions needing both (future)
+    structured         → report-based questions (most queries)
+    web                → explicit external knowledge questions
+    web_search_fallback → structured RAG failed, retry with web search
     """
     intent = state.get("intent", "weekly_summary")
+    retrieval_source = state.get("retrieval_source", "structured")
 
-    # Web search intents — routed to Tavily
+    # Fallback from failed structured RAG → web search
+    if retrieval_source == "web_search_fallback":
+        return "web_search"
+
+    # Explicit web search intents
     web_intents = {"web_search", "external_knowledge", "current_events"}
     if intent in web_intents:
         return "web_search"
 
-    # Everything else uses structured RAG
     return "structured_rag"
+
+
+def should_retry(state: AgentState) -> str:
+    """
+    Loop decision: retry with web search or proceed to output?
+
+    - First retry: structured RAG failed → go to web search (via classify→route)
+    - Second retry or web already tried: give up and format output
+    """
+    if state.get("confidence") == "low" and state.get("retry_count", 0) < 2:
+        return "retry"
+    return "done"
 
 
 def should_retry(state: AgentState) -> str:
@@ -461,12 +496,25 @@ def run_graph(
         # Node 4: generate answer (builds prompt + calls LLM)
         state.update(generate_answer_node(state, ai_client))
 
-        # Node 5: validate with retry loop
+        # Node 5: validate with retry loop — escalates to web search on low confidence
         for _ in range(2):
             state.update(validate_answer_node(state))
             if state["confidence"] == "high":
                 break
-            # On retry: could widen week scope here in future
+            # On retry: if retrieval_source switched to web_search_fallback, do web search
+            if state.get("retrieval_source") == "web_search_fallback":
+                state.update(web_search_node(state, tavily_api_key))
+                state.update(merge_context_node(state))
+                # Rebuild prompt with web context injected into evidence
+                web_ctx = state.get("web_context", "")
+                if web_ctx:
+                    # Inject web context into structured_context evidence
+                    existing = state.get("structured_context", {})
+                    existing_evidence = existing.get("evidence", [])
+                    existing_evidence.insert(0, f"Web Search | Results | {web_ctx[:1500]}")
+                    existing["evidence"] = existing_evidence
+                    state["structured_context"] = existing
+                state.update(generate_answer_node(state, ai_client))
 
         # Node 6: format output
         state.update(format_output_node(state))

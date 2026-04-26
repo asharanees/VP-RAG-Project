@@ -1,0 +1,30 @@
+[
+  {
+    "ParameterKey": "MetaWhatsappSecret",
+    "ParameterValue": "{\"access_token\":\"EAANzLk2meU4BQ4STfyV3mZAXODLJo3TTFjh37fo2kzO6y2uKrZBNcQ2ZAtBR0mpOmJC7VYKBskBapDyJKfjDwPeRCyuRalHwKiFznCtdXCA9VcVUtkJ0g2YGRyVrFq4NtekZCD8tTBnLoPeIBKnHapoYHoaQN8odZCLex4uKHnFOVcCvZBZCERfp7ZA9Mo0RUQ8c3AZDZD\",\"phone_number_id\":\"1069104116283892\"}"
+  },
+  {
+    "ParameterKey": "WebhookVerifySecret",
+    "ParameterValue": "{\"verify_token\":\"VPagent\"}"
+  },
+  {
+    "ParameterKey": "TavilyApiKey",
+    "ParameterValue": "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"
+  },
+  {
+    "ParameterKey": "GeminiApiSecret",
+    "ParameterValue": "{}"
+  },
+  {
+    "ParameterKey": "PrimaryProvider",
+    "ParameterValue": "bedrock"
+  },
+  {
+    "ParameterKey": "GenerationModel",
+    "ParameterValue": "us.anthropic.claude-3-5-haiku-20241022-v1:0"
+  },
+  {
+    "ParameterKey": "FallbackGenerationModel",
+    "ParameterValue": "gemini-2.5-flash"
+  }
+]

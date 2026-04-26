@@ -1830,6 +1830,7 @@ def build_structured_prompt(query: str, intent: str, context: Dict[str, Any]) ->
         "web_search": (
             "The user asked about external information. Answer using the web search results provided. "
             "Be concise and factual. Cite the source URL if available. "
+            "Start your answer with 'Based on web search:' to indicate the source. "
             "If the results don't answer the question, say so clearly."
         ),
         "cost_savings": (

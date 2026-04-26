@@ -48,6 +48,9 @@ Parameters:
     NoEcho: true
     Default: ""
     Description: Tavily API key for web search (optional)
+  GenerationModel:
+    Type: String
+    Default: us.anthropic.claude-3-5-haiku-20241022-v1:0
   FallbackGenerationModel:
     Type: String
     Default: gemini-2.5-flash
