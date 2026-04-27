@@ -22,6 +22,7 @@ Globals:
         VP_RAG_PROJECT_META_WEBHOOK_VERIFY: !Ref WebhookVerifySecret
         VP_RAG_PROJECT_GEMINI_API: !Ref GeminiApiSecret
         TAVILY_API_KEY: !Ref TavilyApiKey
+        TOKEMIZER_API_KEY: !Ref TokemizerApiKey
         GENERATION_MODEL: !Ref GenerationModel
         FALLBACK_GENERATION_MODEL: !Ref FallbackGenerationModel
         WHATSAPP_GRAPH_VERSION: v22.0
@@ -48,6 +49,11 @@ Parameters:
     NoEcho: true
     Default: ""
     Description: Tavily API key for web search (optional)
+  TokemizerApiKey:
+    Type: String
+    NoEcho: true
+    Default: ""
+    Description: Tokemizer MCP API key for prompt compression (optional)
   GenerationModel:
     Type: String
     Default: us.anthropic.claude-3-5-haiku-20241022-v1:0

@@ -23,6 +23,8 @@ GRAPH STRUCTURE:
      ↓                ↓
   [merge_context]            ← combines results from multiple retrievers
      ↓
+  [compress_prompt]          ← Tokemizer MCP: prompt compression before LLM
+     ↓
   [generate_answer]          ← calls LLM with assembled context
      ↓
   [validate_answer]          ← confidence check; loops back if low quality
@@ -34,6 +36,7 @@ GRAPH STRUCTURE:
 
 from __future__ import annotations
 
+import asyncio
 from typing import Any, Dict, List, Optional, TypedDict
 
 # ── LangGraph imports ─────────────────────────────────────────────────────────
@@ -42,10 +45,17 @@ try:
     LANGGRAPH_AVAILABLE = True
 except ImportError:
     LANGGRAPH_AVAILABLE = False
-    # Graceful fallback — the graph still runs via _run_manual_fallback()
     StateGraph = None
     START = "__start__"
     END = "__end__"
+
+# ── Tokemizer MCP imports ──────────────────────────────────────────────────────
+try:
+    from mcp import ClientSession
+    from mcp.client.streamable_http import streamable_http_client
+    MCP_AVAILABLE = True
+except ImportError:
+    MCP_AVAILABLE = False
 
 from common.structured_analyst import (
     build_structured_prompt,
@@ -207,15 +217,38 @@ def merge_context_node(state: AgentState) -> Dict[str, Any]:
     return {}  # no state changes needed — context already in state
 
 
-def generate_answer_node(state: AgentState, ai_client: Any = None) -> Dict[str, Any]:
-    """
-    Node 4: LLM Generation
-    Builds the prompt from assembled context and calls the LLM.
-    The prompt construction is the same as the existing pipeline —
-    LangGraph just makes it an explicit named step.
+_TOKEMIZER_URL = "https://f1nzc35x0j.execute-api.us-east-1.amazonaws.com/prod/mcp"
 
-    When ai_client is provided (production path), calls the LLM and stores
-    the raw answer. When None (test/dry-run path), only builds the prompt.
+
+async def _call_tokemizer(prompt: str, api_key: str) -> str:
+    """Calls the Tokemizer MCP server (Streamable HTTP) and returns the compressed prompt."""
+    import json as _json
+    url = f"{_TOKEMIZER_URL}?apiKey={api_key}"
+    async with streamable_http_client(url) as (read, write, _):
+        async with ClientSession(read, write) as session:
+            await session.initialize()
+            result = await session.call_tool("optimize_prompt", {
+                "prompt": prompt,
+                "optimization_mode": "balanced",
+            })
+            if result.content:
+                raw = result.content[0]
+                text = getattr(raw, "text", None) or str(raw)
+                try:
+                    data = _json.loads(text)
+                    return data.get("optimized_output", prompt)
+                except Exception:
+                    return text if text else prompt
+    return prompt
+
+
+def compress_prompt_node(state: AgentState, tokemizer_api_key: str = "") -> Dict[str, Any]:
+    """
+    Node 3.5: Prompt Compression via Tokemizer MCP
+    Builds the full prompt from assembled context, then sends it to the
+    Tokemizer MCP server (optimize_prompt / balanced mode) to reduce token
+    usage before the LLM call.  Falls back silently to the uncompressed
+    prompt if the service is unavailable or the key is missing.
     """
     prompt = build_structured_prompt(
         state["query"],
@@ -223,6 +256,30 @@ def generate_answer_node(state: AgentState, ai_client: Any = None) -> Dict[str, 
         state["structured_context"],
     )
     prompt = apply_prompt_budget(prompt, max_chars=9000)
+
+    if tokemizer_api_key and MCP_AVAILABLE:
+        try:
+            loop = asyncio.new_event_loop()
+            try:
+                prompt = loop.run_until_complete(_call_tokemizer(prompt, tokemizer_api_key))
+            finally:
+                loop.close()
+        except Exception:
+            pass  # uncompressed prompt is the safe fallback
+
+    return {"prompt": prompt}
+
+
+def generate_answer_node(state: AgentState, ai_client: Any = None) -> Dict[str, Any]:
+    """
+    Node 4: LLM Generation
+    Uses the pre-compressed prompt from compress_prompt_node when available;
+    falls back to building the prompt inline (test / dry-run path).
+    """
+    prompt = state.get("prompt") or apply_prompt_budget(
+        build_structured_prompt(state["query"], state["intent"], state["structured_context"]),
+        max_chars=9000,
+    )
 
     updates: Dict[str, Any] = {"prompt": prompt}
 
@@ -347,7 +404,7 @@ def should_retry(state: AgentState) -> str:
 
 # ── Graph builder ─────────────────────────────────────────────────────────────
 
-def build_agent_graph(structured_reports: List[Dict], ai_client: Any = None, tavily_api_key: str = "") -> Any:
+def build_agent_graph(structured_reports: List[Dict], ai_client: Any = None, tavily_api_key: str = "", tokemizer_api_key: str = "") -> Any:
     """
     Builds and compiles the LangGraph StateGraph.
 
@@ -375,6 +432,9 @@ def build_agent_graph(structured_reports: List[Dict], ai_client: Any = None, tav
     def _generate_node(state: AgentState) -> Dict[str, Any]:
         return generate_answer_node(state, ai_client)
 
+    def _compress_node(state: AgentState) -> Dict[str, Any]:
+        return compress_prompt_node(state, tokemizer_api_key)
+
     # Create the graph with our typed state
     graph = StateGraph(AgentState)
 
@@ -383,16 +443,17 @@ def build_agent_graph(structured_reports: List[Dict], ai_client: Any = None, tav
     graph.add_node("structured_rag", _rag_node)
     graph.add_node("web_search", _web_node)
     graph.add_node("merge_context", merge_context_node)
+    graph.add_node("compress_prompt", _compress_node)
     graph.add_node("generate_answer", _generate_node)
     graph.add_node("validate_answer", validate_answer_node)
     graph.add_node("format_output", format_output_node)
 
     # ── Add edges ─────────────────────────────────────────────────────────────
-    # Fixed edges (always go to next node)
     graph.add_edge(START, "classify_intent")
     graph.add_edge("structured_rag", "merge_context")
     graph.add_edge("web_search", "merge_context")
-    graph.add_edge("merge_context", "generate_answer")
+    graph.add_edge("merge_context", "compress_prompt")
+    graph.add_edge("compress_prompt", "generate_answer")
     graph.add_edge("generate_answer", "validate_answer")
     graph.add_edge("format_output", END)
 
@@ -428,6 +489,7 @@ def run_graph(
     structured_reports: List[Dict],
     ai_client: Any,
     tavily_api_key: str = "",
+    tokemizer_api_key: str = "",
 ) -> Dict[str, Any]:
     """
     Runs the agent graph for a given query.
@@ -472,7 +534,7 @@ def run_graph(
         # ── LangGraph path ────────────────────────────────────────────────────
         # The graph handles all state transitions automatically.
         # Each node is called in order, conditional edges decide routing.
-        app = build_agent_graph(structured_reports, ai_client, tavily_api_key)
+        app = build_agent_graph(structured_reports, ai_client, tavily_api_key, tokemizer_api_key)
         final_state = app.invoke(initial_state)
     else:
         # ── Manual fallback path (same logic, no graph framework) ─────────────
@@ -493,7 +555,10 @@ def run_graph(
         # Node 3: merge context (passthrough for now)
         state.update(merge_context_node(state))
 
-        # Node 4: generate answer (builds prompt + calls LLM)
+        # Node 3.5: compress prompt via Tokemizer MCP before LLM call
+        state.update(compress_prompt_node(state, tokemizer_api_key))
+
+        # Node 4: generate answer (uses pre-compressed prompt)
         state.update(generate_answer_node(state, ai_client))
 
         # Node 5: validate with retry loop — escalates to web search on low confidence
@@ -505,15 +570,16 @@ def run_graph(
             if state.get("retrieval_source") == "web_search_fallback":
                 state.update(web_search_node(state, tavily_api_key))
                 state.update(merge_context_node(state))
-                # Rebuild prompt with web context injected into evidence
                 web_ctx = state.get("web_context", "")
                 if web_ctx:
-                    # Inject web context into structured_context evidence
                     existing = state.get("structured_context", {})
                     existing_evidence = existing.get("evidence", [])
                     existing_evidence.insert(0, f"Web Search | Results | {web_ctx[:1500]}")
                     existing["evidence"] = existing_evidence
                     state["structured_context"] = existing
+                # Recompress with updated context, then regenerate
+                state["prompt"] = ""
+                state.update(compress_prompt_node(state, tokemizer_api_key))
                 state.update(generate_answer_node(state, ai_client))
 
         # Node 6: format output

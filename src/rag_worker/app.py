@@ -216,6 +216,7 @@ def lambda_handler(event: Dict[str, Any], _context: Any) -> Dict[str, Any]:
             structured_reports=structured_reports,
             ai_client=ai_client,
             tavily_api_key=settings.tavily_api_key,
+            tokemizer_api_key=settings.tokemizer_api_key,
         )
 
         intent = graph_result.get("intent", "unknown")
