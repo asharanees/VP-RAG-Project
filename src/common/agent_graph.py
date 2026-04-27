@@ -36,7 +36,6 @@ GRAPH STRUCTURE:
 
 from __future__ import annotations
 
-import asyncio
 from typing import Any, Dict, List, Optional, TypedDict
 
 # ── LangGraph imports ─────────────────────────────────────────────────────────
@@ -49,13 +48,6 @@ except ImportError:
     START = "__start__"
     END = "__end__"
 
-# ── Tokemizer MCP imports ──────────────────────────────────────────────────────
-try:
-    from mcp import ClientSession
-    from mcp.client.streamable_http import streamable_http_client
-    MCP_AVAILABLE = True
-except ImportError:
-    MCP_AVAILABLE = False
 
 from common.structured_analyst import (
     build_structured_prompt,
@@ -220,25 +212,40 @@ def merge_context_node(state: AgentState) -> Dict[str, Any]:
 _TOKEMIZER_URL = "https://f1nzc35x0j.execute-api.us-east-1.amazonaws.com/prod/mcp"
 
 
-async def _call_tokemizer(prompt: str, api_key: str) -> str:
-    """Calls the Tokemizer MCP server (Streamable HTTP) and returns the compressed prompt."""
+def _call_tokemizer(prompt: str, api_key: str) -> str:
+    """Calls the Tokemizer MCP server via JSON-RPC over HTTP and returns the compressed prompt."""
     import json as _json
+    import requests as _req
+
     url = f"{_TOKEMIZER_URL}?apiKey={api_key}"
-    async with streamable_http_client(url) as (read, write, _):
-        async with ClientSession(read, write) as session:
-            await session.initialize()
-            result = await session.call_tool("optimize_prompt", {
-                "prompt": prompt,
-                "optimization_mode": "balanced",
-            })
-            if result.content:
-                raw = result.content[0]
-                text = getattr(raw, "text", None) or str(raw)
-                try:
-                    data = _json.loads(text)
-                    return data.get("optimized_output", prompt)
-                except Exception:
-                    return text if text else prompt
+    headers = {"Content-Type": "application/json", "Accept": "application/json"}
+
+    # Initialize session (stateless server — no session ID returned, but required by protocol)
+    init = _req.post(url, json={
+        "jsonrpc": "2.0", "id": 1, "method": "initialize",
+        "params": {"protocolVersion": "2024-11-05", "capabilities": {},
+                   "clientInfo": {"name": "vp-rag-agent", "version": "1.0.0"}},
+    }, headers=headers, timeout=10)
+    init.raise_for_status()
+    session_id = init.headers.get("Mcp-Session-Id", "")
+    if session_id:
+        headers["Mcp-Session-Id"] = session_id
+
+    # Call optimize_prompt tool
+    resp = _req.post(url, json={
+        "jsonrpc": "2.0", "id": 2, "method": "tools/call",
+        "params": {"name": "optimize_prompt",
+                   "arguments": {"prompt": prompt, "optimization_mode": "balanced"}},
+    }, headers=headers, timeout=15)
+    resp.raise_for_status()
+
+    content = resp.json().get("result", {}).get("content", [])
+    if content:
+        text = content[0].get("text", "")
+        try:
+            return _json.loads(text).get("optimized_output", prompt)
+        except Exception:
+            return text or prompt
     return prompt
 
 
@@ -257,13 +264,9 @@ def compress_prompt_node(state: AgentState, tokemizer_api_key: str = "") -> Dict
     )
     prompt = apply_prompt_budget(prompt, max_chars=9000)
 
-    if tokemizer_api_key and MCP_AVAILABLE:
+    if tokemizer_api_key:
         try:
-            loop = asyncio.new_event_loop()
-            try:
-                prompt = loop.run_until_complete(_call_tokemizer(prompt, tokemizer_api_key))
-            finally:
-                loop.close()
+            prompt = _call_tokemizer(prompt, tokemizer_api_key)
         except Exception:
             pass  # uncompressed prompt is the safe fallback
 
